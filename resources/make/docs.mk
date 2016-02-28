@@ -33,10 +33,11 @@ $(DOCS_GIT_HACK):
 
 setup-temp-repo:
 	@echo "\nSetting up temporary git repos for gh-pages ...\n"
-	@cd $(DOCS_PROD_DIR) && git init
-	@cd $(DOCS_PROD_DIR) && git add * > /dev/null
-	@cd $(DOCS_PROD_DIR) && git commit -a -m "Generated content." > /dev/null
+	@cd $(DOCS_PROD_DIR) &&  \
+	git init && \
+	git add * > /dev/null && \
+	git commit -a -m "Generated content." > /dev/null
 
 teardown-temp-repo:
 	@echo "\nTearing down temporary gh-pages repos ..."
-	@rm $(DOCS_PROD_DIR)/.git
+	@rm -rf $(DOCS_PROD_DIR)/.git
