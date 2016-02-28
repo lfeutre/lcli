@@ -1,4 +1,4 @@
-.PHONY: docs api-docs user-guide publish-docs clean-docs
+.PHONY: docs proj-docs publish-docs clean-docs
 
 DOCS_DIR = $(ROOT_DIR)/docs
 CURRENT_VERSION = current
@@ -12,8 +12,8 @@ publish-docs: $(DOCS_PROD_DIR) docs setup-temp-repo
 	@cd $(DOCS_PROD_DIR) && git push -f $(REPO) master:gh-pages
 	@make teardown-temp-repo
 
-# The options for generating the API documentation are saved in configuration
-# files. See the project rebar.config file for more info.
+# The options for generating the project documentation are saved in
+# configuration files. See the project rebar.config file for more info.
 proj-docs:
 	@echo "\nBuilding project docs ...\n"
 	@rm -rf $(CURRENT_PROD_DIR)
@@ -27,9 +27,6 @@ $(DOCS_PROD_DIR):
 
 $(DOCS_GIT_HACK):
 	@ln -s $(ROOT_DIR)/.git $(DOCS_GIT_HACK)
-
-# $(USER_GUIDE_DIR)/.git:
-# 	@ln -s $(ROOT_DIR)/.git $(USER_GUIDE_DIR)
 
 setup-temp-repo:
 	@echo "\nSetting up temporary git repos for gh-pages ...\n"
