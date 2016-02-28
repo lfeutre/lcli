@@ -5,7 +5,7 @@ CURRENT_VERSION = current
 DOCS_PROD_DIR = $(DOCS_DIR)
 CURRENT_PROD_DIR = $(DOCS_PROD_DIR)/$(CURRENT_VERSION)
 
-docs: clean-docs proj-docs
+docs: clean-docs build proj-docs
 
 publish-docs: $(DOCS_PROD_DIR) docs setup-temp-repo
 	@echo "\nPublishing docs ...\n"
