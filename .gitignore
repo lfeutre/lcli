@@ -1,0 +1,10 @@
+.eunit
+deps
+*.beam
+*.plt
+*.sw[po]
+ebin/*
+_build/*
+rebar.lock
+priv/*
+docs/current
