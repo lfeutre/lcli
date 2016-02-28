@@ -2,8 +2,8 @@
 
 [![][lcli-logo]][lcli-logo-large]
 
-[lcli-logo]: resources/images/lcli-250x.png
-[lcli-logo-large]: resources/images/lcli-1200x.png
+[lcli-logo]: resources/images/elkly-250x.png
+[lcli-logo-large]: resources/images/elkly-1200x.png
 
 *An LFE Command Line Options & Tool Builder*
 
