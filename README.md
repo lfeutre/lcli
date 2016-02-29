@@ -71,22 +71,22 @@ There is a simiar script in the ``examples`` directory (``simple-parse2.lfe``), 
 You can then do the following with this script, as long as ``lfe`` is in your ``$PATH``:
 
 ```cl
-$ ./examples/simple-parse.lfe
+$ ./examples/simple-parse1.lfe
 Hello, World!
 
-$ ./examples/simple-parse.lfe -g "Awwww, "
+$ ./examples/simple-parse1.lfe -g "Awwww, "
 Awwww, World!
 
-$ ./examples/simple-parse.lfe -e "Mr. Bill!"
+$ ./examples/simple-parse1.lfe -e "Mr. Bill!"
 Hello, Mr. Bill!
 
-$ ./examples/simple-parse.lfe -g "Awwww, " -e "Nuts!"
+$ ./examples/simple-parse1.lfe -g "Awwww, " -e "Nuts!"
 Awwww, Nuts!
 
-$ ./examples/simple-parse.lfe --greeting "On, no! " -e "Nuts!"
+$ ./examples/simple-parse1.lfe --greeting "On, no! " -e "Nuts!"
 On, no! Nuts!
 
-$ ./examples/simple-parse.lfe --greeting "On, no! " --greetee "Mr. Bill!"
+$ ./examples/simple-parse1.lfe --greeting "On, no! " --greetee "Mr. Bill!"
 On, no! Mr. Bill!
 ```
 
