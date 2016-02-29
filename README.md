@@ -21,7 +21,11 @@
 
 ## Introduction [&#x219F;](#table-of-contents)
 
-TBD
+lcli (pronounced "Elkly") is a semi-opinionated library for creating command line tools and supporting options (flags) and arguments (non-flag parameters) parsing. Regular options parsing is done using the Erlang [getopt](https://github.com/oubiwann/getopt-erl) community library. lcli manages the handling of commands and nested subcommands.
+
+lcli is very opinionated around context: sometimes the complete context for a command is needed, even down at the lowest (most-nested) level. As such, this should always be made available to the programmer/script writer. (This is a lesson-learned from some of the Common Lisp command line pasring libraries which don't provide the entire context at any given time -- something that can lead to much awkward code.)
+
+lcli is *not* opinionated about how option and argument values are to be handled -- possibly not even with a function itself. As such, the specs do not contain or require onen to add functions for handling particular options. It is intended that these decisions are managed by whatever ``main`` function (or set of dispatched functions) is (are) in charge of the script itself. This provides the programmer/scripter with maximum flexibility and minimum fuss.
 
 
 ## Documentation [&#x219F;](#table-of-contents)
