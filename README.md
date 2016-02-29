@@ -57,16 +57,16 @@ A simple script below demonstrates lcli's wrappage of the Erlang getopt library:
 (defun main ()
   (case (lcli:parse (opt-spec))
     (`(,_ #(opts ,opts) ,_)
-      (lfe_io:format "~s~s~n"
-                     `(,(proplists:get_value 'greeting opts)
-                       ,(proplists:get_value 'greetee opts))))
+      (io:format "~s~s~n"
+                 `(,(lcli:get-opt 'greeting opts)
+                   ,(lcli:get-opt 'greetee opts)))
     (result
       (error result))))
 
 (main)
 ```
 
-There is a simiar script in the ``examples`` directory (``simple-parse.lfe``), but with better error checking and a ``--help`` option -- be sure to take a look at that one.
+There is a simiar script in the ``examples`` directory (``simple-parse2.lfe``), but with better error checking and a ``--help`` option -- be sure to take a look at that one.
 
 You can then do the following with this script, as long as ``lfe`` is in your ``$PATH``:
 

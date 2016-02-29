@@ -10,25 +10,25 @@
 ;;;;   $ ./examples/simple-parse.lfe
 ;;;;   Hello, World!
 ;;;;
-;;;;   $ ./examples/simple-parse.lfe -g "Awwww, "
+;;;;   $ ./examples/simple-parse2.lfe -g "Awwww, "
 ;;;;   Awwww, World!
 ;;;;
-;;;;   $ ./examples/simple-parse.lfe -e "Mr. Bill!"
+;;;;   $ ./examples/simple-parse2.lfe -e "Mr. Bill!"
 ;;;;   Hello, Mr. Bill!
 ;;;;
-;;;;   $ ./examples/simple-parse.lfe -g "Awwww, " -e "Nuts!"
+;;;;   $ ./examples/simple-parse2.lfe -g "Awwww, " -e "Nuts!"
 ;;;;   Awwww, Nuts!
 ;;;;
-;;;;   $ ./examples/simple-parse.lfe --greeting "On, no! " -e "Nuts!"
+;;;;   $ ./examples/simple-parse2.lfe --greeting "On, no! " -e "Nuts!"
 ;;;;   On, no! Nuts!
 ;;;;
-;;;;   $ ./examples/simple-parse.lfe --greeting "On, no! " --greetee "Mr. Bill!"
+;;;;   $ ./examples/simple-parse2.lfe --greeting "On, no! " --greetee "Mr. Bill!"
 ;;;;   On, no! Mr. Bill!
 ;;;;
 ;;;; To see the help output:
 ;;;;
-;;;;   $ ./examples/simple-parse.lfe --help
-;;;;   Usage: ./examples/simple-parse.lfe [-h] [-g [<greeting>]] [-e [<greetee>]]
+;;;;   $ ./examples/simple-parse2.lfe --help
+;;;;   Usage: ./examples/simple-parse2.lfe [-h] [-g [<greeting>]] [-e [<greetee>]]
 ;;;;
 ;;;;     -h, --help      Display this help text.
 ;;;;     -g, --greeting  A greeting for someone. [default: Hello, ]
