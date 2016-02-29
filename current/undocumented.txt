@@ -1,0 +1,13 @@
+== lcli-exceptions ==
+opt-parse/1
+arg-parse/1
+make-error/2
+make-error/1
+
+== lcli ==
+parse/3
+parse/1
+parse-opts/2
+get-args/0
+get-script/0
+get-raw-args/0
