@@ -11,8 +11,8 @@
 #### Table of Contents
 
 * [Introduction](#introduction-)
-* [Documentation](#documentation-)
 * [Example Usage](#example-usage-)
+* [Documentation](#documentation-)
 * [License](#license-)
 
 
@@ -26,19 +26,6 @@ lcli (pronounced "Elkly") is a semi-opinionated library for creating command lin
 lcli is very opinionated around context: sometimes the complete context for a command is needed, even down at the lowest (most-nested) level. As such, this should always be made available to the programmer/script writer. (This is a lesson-learned from some of the Common Lisp command line pasring libraries which don't provide the entire context at any given time -- something that can lead to much awkward code.)
 
 lcli is *not* opinionated about *how* option and argument values are to be handled -- possibly not even with a function itself. As such, the specs do not contain or require one to add functions for handling particular options. It is intended that these decisions are managed by whatever ``main`` function (or set of dispatched functions) is (are) in charge of the script itself. This provides the programmer/scripter with maximum flexibility and minimum fuss.
-
-
-## Documentation [&#x219F;](#table-of-contents)
-
-Project documentation is here:
-
-* [Docs](http://oubiwann.github.com/lcli/current)
-
-Example scripts (some not using lcli, for demonstration purposes) are available here:
-
-* [Examples](examples)
-
-If you've created a simple script that shows off some nice functionality of "Elkly", you are encouraged to submit a PR for inclusion here!
 
 
 ## Example Usage [&#x219F;](#table-of-contents)
@@ -98,6 +85,19 @@ More sophisticated usage can create subcommands, etc., for creating command line
 ```cl
 
 ```
+
+
+## Documentation [&#x219F;](#table-of-contents)
+
+Project documentation is here:
+
+* [Docs](http://oubiwann.github.com/lcli/current)
+
+Example scripts (some not using lcli, for demonstration purposes) are available here:
+
+* [Examples](examples)
+
+If you've created a simple script that shows off some nice functionality of "Elkly", you are encouraged to submit a PR for inclusion here!
 
 
 ## License [&#x219F;](#table-of-contents)
