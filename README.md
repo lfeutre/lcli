@@ -33,6 +33,8 @@ Project documentation is here:
 
 ## Example Usage [&#x219F;](#table-of-contents)
 
+### Wrapping ``getopt``
+
 A simple script below demonstrates lcli's wrappage of the Erlang getopt library:
 
 ```cl
@@ -75,6 +77,9 @@ On, no! Nuts!
 $ ./examples/simple-parse.lfe --greeting "On, no! " --greetee "Mr. Bill!"
 On, no! Mr. Bill!
 ```
+
+
+### Subcommands
 
 More sophisticated usage can create subcommands, etc., for creating command line tools with potentially vast arrays of functionality:
 
