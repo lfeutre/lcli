@@ -2,7 +2,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;
 ;;;; This script extracts individual parsed (and default) arguements after
-;;;; they have been checked.
+;;;; they have been checked. The functionality demonstrated below is of the
+;;;; thin wrapping functions around the getopt Erlang library.
 ;;;;
 ;;;; To run the script, ensure that lfe is in your $PATH, then:
 ;;;;
@@ -24,17 +25,39 @@
 ;;;;   $ ./examples/simple-parse.lfe --greeting "On, no! " --greetee "Mr. Bill!"
 ;;;;   On, no! Mr. Bill!
 ;;;;
+;;;; To see the help output:
+;;;;
+;;;;   $ ./examples/simple-parse.lfe --help
+;;;;   Usage: ./examples/simple-parse.lfe [-h] [-g [<greeting>]] [-e [<greetee>]]
+;;;;
+;;;;     -h, --help      Display this help text.
+;;;;     -g, --greeting  A greeting for someone. [default: Hello, ]
+;;;;     -e, --greetee   Someone or something to greet. [default: World!]
+;;;;
 (defun opt-spec ()
-  `(#(greeting #\g "greeting" #(string "Hello, ") "A greeting for someone.")
+  `(#(help #\h "help" undefined "Display this help text.")
+    #(greeting #\g "greeting" #(string "Hello, ") "A greeting for someone.")
     #(greetee #\e "greetee" #(string "World!") "Someone or something to greet.")))
 
+(defun help ()
+  (lcli:usage (opt-spec)))
+
+(defun help (msg)
+  (lfe_io:format "~n~s~n~n" `(,msg))
+  (help))
+
 (defun main ()
-  (case (lcli:parse (opt-spec))
-    (`(,_ #(opts ,opts) ,_)
-      (lfe_io:format "~s~s~n"
-                     `(,(proplists:get_value 'greeting opts)
-                       ,(proplists:get_value 'greetee opts))))
-    (result
-      (error result))))
+  (let ((`(,_ #(opts ,opts) ,_) (lcli:parse (opt-spec))))
+    (cond
+      ((== opts 'opt-parse-error)
+        (help "Error: could not parse given option(s)")
+        (halt 1))
+      ((lcli:help? opts)
+        (help))
+      ('true
+        (lfe_io:format "~s~s~n"
+                      `(,(lcli:get-opt 'greeting opts)
+                        ,(lcli:get-opt 'greetee opts)))))
+    (halt 0)))
 
 (main)

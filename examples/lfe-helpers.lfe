@@ -3,7 +3,8 @@
 ;;;;
 ;;;; This script shows the default argument/option handling from Erlang
 ;;;; that is most useful for LFE scripts as well as the helper variables
-;;;; provided by LFE for getting arguments and script name.
+;;;; provided by LFE for getting arguments and script name. It shows nothing
+;;;; of the functionality provided by lcli.
 ;;;;
 ;;;; To run the script, ensure that lfe is in your $PATH, then:
 ;;;;

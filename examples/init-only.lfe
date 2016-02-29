@@ -2,7 +2,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;
 ;;;; This script simply shows the default argument/option handling from
-;;;; Erlang that is most useful for LFE scripts.
+;;;; Erlang that is most useful for LFE scripts. It shows nothing of the
+;;;; functionality provided by lcli.
 ;;;;
 ;;;; To run the script, ensure that lfe is in your $PATH, then:
 ;;;;
