@@ -27,6 +27,19 @@
     (err
       (lcli-exceptions:opt-parse err))))
 
+(defun get-opt (key opts)
+  "Extract the value of an option associated with the given key."
+  (element 2 (lists:keyfind key 1 opts)))
+
+(defun opt? (key opts)
+  "Test for the presence of a boolean option."
+  (andalso (is_list opts)
+           (lists:member key opts)))
+
+(defun help? (opts)
+  "Test for the presence of the 'help' option (boolean)."
+  (opt? 'help opts))
+
 (defun parse (spec)
   (let ((`(#(script ,script) #(args ,raw-args)) (get-raw-args)))
     (parse spec script raw-args)))
@@ -37,5 +50,10 @@
       #(opts ,opts)
       #(args ,args))))
 
-;;; Aliases for getopt
+(defun usage (spec)
+  "Wrap the ``(getopt:usage)`` function, providing the computed script name."
+  (usage spec (get-script)))
 
+(defun usage (spec script)
+  "Wrap the ``(getopt:usage)`` function."
+  (getopt:usage spec script))
