@@ -56,6 +56,8 @@ A simple script below demonstrates lcli's wrappage of the Erlang getopt library:
 (main)
 ```
 
+There is a simiar script in the ``examples`` directory (``simple-parse.lfe``), but with better error checking and a ``--help`` option -- be sure to take a look at that one.
+
 You can then do the following with this script, as long as ``lfe`` is in your ``$PATH``:
 
 ```cl
@@ -93,5 +95,5 @@ More sophisticated usage can create subcommands, etc., for creating command line
 ```
 Copyright © 2016 Duncan McGreggor
 
-Distributed under the Apache License Version 2.0.
+Distributed under the Apache License, Version 2.0.
 ```
