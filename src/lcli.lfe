@@ -1,7 +1,41 @@
 (defmodule lcli
   (export all))
 
+(defun get-raw-args ()
+  (let ((all-args (init:get_plain_arguments)))
+    `(#(script ,(car all-args))
+      #(args ,(lists:nthtail 1 all-args)))))
+
+(defun get-script ()
+  (case (get-raw-args)
+    (`(#(script ,script) ,_)
+      script)
+    (result
+      (lcli-exceptions:arg-parse result))))
+
 (defun get-args ()
-  (let ((args (init:get_plain_arguments)))
-    `(#(script ,(car args))
-      #(args ,(lists:nthtail 1 args)))))
+  (case (get-raw-args)
+    (`(,_ #(args ,args))
+      args)
+    (result
+      (lcli-exceptions:arg-parse result))))
+
+(defun parse-opts (spec raw-args)
+  (case (getopt:parse_and_check spec raw-args)
+    (`#(ok ,result)
+      result)
+    (err
+      (lcli-exceptions:opt-parse err))))
+
+(defun parse (spec)
+  (let ((`(#(script ,script) #(args ,raw-args)) (get-raw-args)))
+    (parse spec script raw-args)))
+
+(defun parse (spec cmd raw-args)
+  (let ((`#(,opts ,args) (parse-opts spec raw-args)))
+    `(#(cmd ,cmd)
+      #(opts ,opts)
+      #(args ,args))))
+
+;;; Aliases for getopt
+
