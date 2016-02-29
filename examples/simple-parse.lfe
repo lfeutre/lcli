@@ -46,18 +46,22 @@
   (lfe_io:format "~n~s~n~n" `(,msg))
   (help))
 
+(defun handle-options (opts)
+  (cond
+    ((== opts 'opt-parse-error)
+      (help "Error: could not parse given option(s)")
+      (halt 1))
+    ((lcli:help? opts)
+      (help)
+      (halt 0))
+    ('true
+      (lfe_io:format "~s~s~n"
+                    `(,(lcli:get-opt 'greeting opts)
+                      ,(lcli:get-opt 'greetee opts)))
+      (halt 0))))
+
 (defun main ()
   (let ((`(,_ #(opts ,opts) ,_) (lcli:parse (opt-spec))))
-    (cond
-      ((== opts 'opt-parse-error)
-        (help "Error: could not parse given option(s)")
-        (halt 1))
-      ((lcli:help? opts)
-        (help))
-      ('true
-        (lfe_io:format "~s~s~n"
-                      `(,(lcli:get-opt 'greeting opts)
-                        ,(lcli:get-opt 'greetee opts)))))
-    (halt 0)))
+    (handle-options opts)))
 
 (main)
