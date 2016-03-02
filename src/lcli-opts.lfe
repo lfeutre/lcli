@@ -2,7 +2,10 @@
   (export all))
 
 (defun parse-opts (spec raw-args)
-  "Parse only the options in the spec, not the commands."
+  "Parse the options in a given spec by calling ``getopt:parse``.
+
+  Note that this function will fail if the passed 'spec' contains
+  non-option data such as 'commands'."
   (case (getopt:parse spec raw-args)
     (`#(ok ,result)
       result)
