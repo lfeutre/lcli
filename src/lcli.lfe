@@ -1,59 +1,58 @@
 (defmodule lcli
   (export all))
 
-(defun get-raw-args ()
-  (let ((all-args (init:get_plain_arguments)))
-    `(#(script ,(car all-args))
-      #(args ,(lists:nthtail 1 all-args)))))
+(defun get-spec (key specs)
+  "Given the key for a spec and a list of specs, return the first spec that
+  has the given key.
 
-(defun get-script ()
-  (case (get-raw-args)
-    (`(#(script ,script) ,_)
-      script)
-    (result
-      (lcli-exceptions:arg-parse result))))
+  Note that this function returns the whole spec (key and value) not just the
+  value."
+  (case (lists:keyfind key 1 specs)
+    (spec spec)
+    ('false 'undefined)))
 
-(defun get-args ()
-  (case (get-raw-args)
-    (`(,_ #(args ,args))
-      args)
-    (result
-      (lcli-exceptions:arg-parse result))))
+(defun parse-command
+  ((`#(,cmd #(opts ,opts)))
+    `#(,cmd #(opts ,(parse opts))))
+  ((command)
+    (logjam:start)
+    (logjam:error "Couldn't parse: ~p" `(,command))
+    (timer:sleep 1000)
+    command))
 
-(defun parse-opts (spec raw-args)
-  (case (getopt:parse_and_check spec raw-args)
-    (`#(ok ,result)
-      result)
-    (err
-      (lcli-exceptions:opt-parse err))))
+(defun parse-commands (commands)
+  (lists:map #'parse-command/1 commands))
 
-(defun get-opt (key opts)
-  "Extract the value of an option associated with the given key."
-  (element 2 (lists:keyfind key 1 opts)))
+(defun parse (specs)
+  (parse specs (lcli-args:get-raw-args)))
 
-(defun opt? (key opts)
-  "Test for the presence of a boolean option."
-  (andalso (is_list opts)
-           (lists:member key opts)))
+(defun parse
+  ((specs `(#(script ,script) #(args ,args)))
+    (if (lcli-cmds:has-commands? specs)
+      (let* ((opts-only-spec (lcli-opts:filter-specs specs))
+             (`#(,opts ,args) (lcli-opts:parse-opts opts-only-spec args))
+             (commands (lcli-opts:get-opt 'commands specs)))
+        `(#(cmd ,script)
+          #(opts ,opts)
+          #(args ,args)
+          #(cmds ,(parse-commands commands))))
+      (let ((`#(,opts ,args) (lcli-opts:parse-opts specs args)))
+        `(#(cmd ,script)
+          #(opts ,opts)
+          #(args ,args)
+          #(cmds undefined))))))
 
-(defun help? (opts)
-  "Test for the presence of the 'help' option (boolean)."
-  (opt? 'help opts))
+(defun command-usage (commands)
+  "Print usage information for the defined commands."
+  (lfe_io:format "Commands:~n" '()))
 
-(defun parse (spec)
-  (let ((`(#(script ,script) #(args ,raw-args)) (get-raw-args)))
-    (parse spec script raw-args)))
-
-(defun parse (spec cmd raw-args)
-  (let ((`#(,opts ,args) (parse-opts spec raw-args)))
-    `(#(cmd ,cmd)
-      #(opts ,opts)
-      #(args ,args))))
-
-(defun usage (spec)
+(defun usage (specs)
   "Wrap the ``(getopt:usage)`` function, providing the computed script name."
-  (usage spec (get-script)))
+  (usage specs (lcli-args:get-script)))
 
-(defun usage (spec script)
-  "Wrap the ``(getopt:usage)`` function."
-  (getopt:usage spec script))
+(defun usage (specs script)
+  "Wrap the ``(getopt:usage)`` function while providing support for command
+  usage."
+  (getopt:usage specs script)
+  (if (lcli-cmds:has-commands? specs)
+    (command-usage (lcli-opts:get-opt 'commands specs))))
