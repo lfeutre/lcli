@@ -22,17 +22,21 @@
 (defun get-script ()
   "Using the Erlang function ``#'init:get_plain_arguments/0``, extract the
   the name of the script that was passed arguments via the command line."
-  (case (get-raw-args)
-    (`(#(script ,script) ,_)
-      script)
-    (result
-      (lcli-exceptions:arg-parse result))))
+  (get-script (get-raw-args)))
+
+(defun get-script
+  ((`(#(script ,script) ,_))
+    script)
+  ((result)
+    (lcli-exceptions:arg-parse result)))
 
 (defun get-args ()
   "Using the Erlang function ``#'init:get_plain_arguments/0``, extract the
   arguments passed to a script via the command line."
-  (case (get-raw-args)
-    (`(,_ #(args ,args))
+  (get-args (get-raw-args)))
+
+(defun get-args
+  ((`(,_ #(args ,args)))
       args)
-    (result
-      (lcli-exceptions:arg-parse result))))
+  ((result)
+      (lcli-exceptions:arg-parse result)))
