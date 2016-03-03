@@ -2,7 +2,9 @@
   (export all))
 
 (defun parse-opts (spec raw-args)
-  "Parse the options in a given spec by calling ``getopt:parse``.
+  "Parse the options in a given spec by calling ``getopt:parse``. Returns a
+  tuple of #(parsed-opts unparsed-args), where the second element is comprised
+  of elements passed as arguments on the command line but with no flag.
 
   Note that this function will fail if the passed 'spec' contains
   non-option data such as 'commands'."
@@ -25,16 +27,16 @@
     ('false
       'undefined)))
 
-(defun boolean-opt? (key opts)
+(defun boolean? (key opts)
   "Test for the presence of a boolean option."
   (andalso (is_list opts)
            (lists:member key opts)))
 
 (defun help? (opts)
   "Test for the presence of the 'help' option (boolean)."
-  (boolean-opt? 'help opts))
+  (boolean? 'help opts))
 
 (defun filter-specs (specs)
   "In a list of specs, return only those that are true option specs, not those
   that are lcli-specific 'commands specs'."
-  (lists:filtermap #'lcli-cmds:not-commmands?/1 specs))
+  (lists:filtermap #'lcli-cmds:not-commands?/1 specs))
