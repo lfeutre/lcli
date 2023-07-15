@@ -9,7 +9,7 @@ all: build
 clean-all: clean clean-docs
 	rebar3 lfe clean
 
-include resources/make/code.mk
-include resources/make/docs.mk
+include priv/make/code.mk
+include priv/make/docs.mk
 
 .PHONY: all clean-all

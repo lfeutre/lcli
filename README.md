@@ -1,12 +1,13 @@
 # lcli
 
-[![][lcli-logo]][lcli-logo-large]
-
-[lcli-logo]: resources/images/elkly-250x.png
-[lcli-logo-large]: resources/images/elkly-1200x.png
+[![Build Status][gh-actions-badge]][gh-actions]
+[![LFE Versions][lfe badge]][lfe]
+[![Erlang Versions][erlang badge]][versions]
+[![Tags][github tags badge]][github tags]
 
 *An LFE Command Line Options & Tool Builder*
 
+[![Project logo][logo]][logo-large]
 
 #### Table of Contents
 
@@ -107,7 +108,26 @@ If you've created a simple script that shows off some nice functionality of "Elk
 ## License [&#x219F;](#table-of-contents)
 
 ```
-Copyright © 2016 Duncan McGreggor
+Copyright © 2016-2023 Duncan McGreggor
 
 Distributed under the Apache License, Version 2.0.
 ```
+
+[//]: ---Named-Links---
+
+[logo]: priv/images/elkly-250x.png
+[logo-large]: priv/images/elkly-1200x.png
+[gh-actions-badge]: https://github.com/lfeutre/lcli/workflows/ci%2Fcd/badge.svg
+[gh-actions]: https://github.com/lfeutre/lcli/actions
+[github]: https://github.com/lfeutre/lcli
+[gitlab]: https://gitlab.com/lfeutre/lcli
+[lfe]: https://github.com/lfe/lfe
+[lfe badge]: https://img.shields.io/badge/lfe-2.1-blue.svg
+[erlang badge]: https://img.shields.io/badge/erlang-21%20to%2026-blue.svg
+[versions]: https://github.com/lfeutre/lcli/blob/master/.github/workflows/cicd.yml
+[github tags]: https://github.com/lfeutre/lcli/tags
+[github tags badge]: https://img.shields.io/github/tag/lfeutre/lcli.svg
+[github downloads]: https://img.shields.io/github/downloads/lfeutre/lcli/total.svg
+[hex badge]: https://img.shields.io/hexpm/v/lcli.svg?maxAge=2592000
+[hex package]: https://hex.pm/packages/lcli
+[hex downloads]: https://img.shields.io/hexpm/dt/lcli.svg
