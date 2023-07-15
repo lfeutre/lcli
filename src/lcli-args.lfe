@@ -28,7 +28,7 @@
   ((`(#(script ,script) ,_))
     script)
   ((result)
-    (lcli-exceptions:arg-parse result)))
+    (lcli-error:arg-parse result)))
 
 (defun get-args ()
   "Using the Erlang function ``#'init:get_plain_arguments/0``, extract the
@@ -39,4 +39,4 @@
   ((`(,_ #(args ,args)))
       args)
   ((result)
-      (lcli-exceptions:arg-parse result)))
+      (lcli-error:arg-parse result)))

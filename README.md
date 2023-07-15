@@ -12,6 +12,7 @@
 #### Table of Contents
 
 * [Introduction](#introduction-)
+* [Erlang getopt Wrapper and More](#erlang-getopt-wrapper-and-more-)
 * [Differences from lfescript](#differences-from-lfescript-)
 * [Example Usage](#example-usage-)
 * [Documentation](#documentation-)
@@ -28,6 +29,12 @@ lcli (pronounced *"Elk-ly"*) is a semi-opinionated library for creating command 
 lcli is very opinionated around context: sometimes the complete context for a command is needed, even down at the lowest (most-nested) level. As such, this should always be made available to the programmer/script writer. (This is a lesson-learned from some of the Common Lisp command line pasring libraries which don't provide the entire context at any given time -- something that can lead to much awkward code.)
 
 lcli is *not* opinionated about *how* option and argument values are to be handled -- possibly not even with a function itself. As such, the specs do not contain or require one to add functions for handling particular options. It is intended that these decisions are managed by whatever ``main`` function (or set of dispatched functions) is (are) in charge of the script itself. This provides the programmer/scripter with maximum flexibility and minimum fuss.
+
+## Erlang `getopt` Wrapper and More [&#x219F;](#table-of-contents)
+
+lcli provides a very thing wrapper around getopt, basically converting to and from the getopt spec tuple with LFE/Erlang maps.
+
+In addition, lcli provides command and subcommand support where the command spec is a superset of the getopt spec (thus allowing us to use the getopt library transparently).
 
 ## Differences from `lfescript` [&#x219F;](#table-of-contents)
 
