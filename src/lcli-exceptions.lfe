@@ -1,8 +1,6 @@
 (defmodule lcli-exceptions
   (export all))
 
-(include-lib "clj/include/compose.lfe")
-
 (defun make-error (msg)
   `#(error ,msg))
 
@@ -10,10 +8,10 @@
   `#(,err ,msg))
 
 (defun make-error-info (err preamble msg)
-  (->> msg
-       (list preamble)
-       (io_lib:format "~s ~p")
-       (make-error err)))
+  (clj:->> msg
+          (list preamble)
+          (io_lib:format "~s ~p")
+          (make-error err)))
 
 (defun arg-parse (msg)
   (make-error-info 'arg-parse-error "Can't parse args:" msg))

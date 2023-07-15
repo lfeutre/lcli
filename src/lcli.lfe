@@ -1,6 +1,8 @@
 (defmodule lcli
   (export all))
 
+(include-lib "logjam/include/logjam.hrl")
+
 (defun parse (specs)
   (parse specs (lcli-args:get-raw-args)))
 
@@ -31,7 +33,7 @@
     `#(,cmd #(opts ,(parse opts))))
   ((command)
     (logjam:start)
-    (logjam:error "Couldn't parse: ~p" `(,command))
+    (log-error "Couldn't parse: ~p" `(,command))
     (timer:sleep 1000)
     command))
 
