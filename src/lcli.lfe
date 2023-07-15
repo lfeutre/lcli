@@ -3,6 +3,9 @@
 
 (include-lib "logjam/include/logjam.hrl")
 
+(defun start ()
+  (logjam:set-dev-config))
+
 (defun parse (specs)
   (parse specs (lcli-args:get-raw-args)))
 
@@ -32,9 +35,8 @@
   ((`#(,cmd #(opts ,opts)))
     `#(,cmd #(opts ,(parse opts))))
   ((command)
-    (logjam:start)
     (log-error "Couldn't parse: ~p" `(,command))
-    (timer:sleep 1000)
+    (timer:sleep 250)
     command))
 
 (defun parse-commands (commands)
@@ -64,3 +66,11 @@
   (case (lists:keyfind key 1 specs)
     (spec spec)
     ('false 'undefined)))
+
+;;; Metadata
+
+(defun version ()
+  (lcli-vsn:get))
+
+(defun versions ()
+  (lcli-vsn:all))
