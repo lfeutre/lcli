@@ -1,8 +1,21 @@
 {application, lcli, [
-    {description, "An LFE Command Line Options & Tool Builder"},
-    {vsn, "0.1.0-dev"},
-    {modules, [lcli]},
-    {registered, []},
-    {applications, [kernel, stdlib]},
-    {env, []}
+  {description, "An LFE Command Line Options & Tool Builder"},
+  {vsn, "0.1.0"},
+  {modules, [lcli]},
+  {registered, []},
+  {applications, [kernel, stdlib]},
+  {env, []},
+
+  %% Package metadata:
+  {licenses, ["Apache-2"]},
+  {links, [
+    {"GitHub", "https://github.com/lfeutre/lcli"},
+    {"Gitlab", "https://gitlab.com/lfeutre/lcli"},
+    {"Hex", "https://hex.pm/packages/lcli"}
+  ]},
+  {exclude_files, [
+    "priv/html/*",
+    "priv/images/*",
+    "priv/make/*"
+  ]}
 ]}.
