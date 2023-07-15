@@ -94,9 +94,7 @@ More sophisticated usage can create subcommands, etc., for creating command line
 
 ## Documentation [&#x219F;](#table-of-contents)
 
-Project documentation is here:
-
-* [Docs](http://oubiwann.github.com/lcli/current)
+Project documentation is TBD.
 
 Example scripts (some not using lcli, for demonstration purposes) are available here:
 
