@@ -27,6 +27,9 @@ lcli is very opinionated around context: sometimes the complete context for a co
 
 lcli is *not* opinionated about *how* option and argument values are to be handled -- possibly not even with a function itself. As such, the specs do not contain or require one to add functions for handling particular options. It is intended that these decisions are managed by whatever ``main`` function (or set of dispatched functions) is (are) in charge of the script itself. This provides the programmer/scripter with maximum flexibility and minimum fuss.
 
+## Differents from `lfescript` [&#x219F;](#table-of-contents)
+
+This library does not use `lfescript` as its basis, but rather the `lfe` executable itself. As such, a `main` function is not run automatically. Instead, the final line of the script must call the "main" function (whatever its name).
 
 ## Example Usage [&#x219F;](#table-of-contents)
 
