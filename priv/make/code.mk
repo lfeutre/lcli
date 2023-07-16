@@ -1,17 +1,16 @@
-.PHONY: build repl check check-quiet clean
+.PHONY: build repl test clean clean-all
 
 build:
-	rebar3 compile
+	@rebar3 compile
 
 repl:
-	@$(LFE)
+	@rebar3 lfe repl
 
-check:
-	rebar3 eunit -v
-
-check-quiet:
-	rebar3 eunit
+test:
+	@rebar3 as test lfe ltest -tall
 
 clean:
-	rebar3 clean
-	rm -rf priv
+	@rm -rf _build/*/lib/lcli build/*/plugins/lcli
+
+clean-all: clean
+	@rm -rf _build
