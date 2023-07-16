@@ -89,7 +89,14 @@ A simple script below demonstrates lcli's wrappage of the Erlang getopt library:
     #m(long "output" short #\o type string help "Output file")))
 
 (defun main ()
-  (lfe_io:format "~p~n" `(,(lcli:parse (options)))))
+  (case (lcli:parse (options))
+    (`(,_ #(opts #m(help true)) ,_ ,_)
+     (lcli:usage (options) "db.lfe")
+     (halt 0))
+    (result
+     (lfe_io:format "~p~n" `(,result))
+     (halt 0)))
+  'ok)
 
 (main)
 ```
@@ -111,6 +118,26 @@ Output
  #(cmds undefined))
 ```
 
+Help:
+
+```shell
+ $ ./examples/db.lfe --help
+```
+
+Output:
+
+```text
+Usage: db.lfe [--help] [-h [<host>]] [-p <port>] [--dbname [<dbname>]]
+              [-x] [-v <verbose>] [-o <output>]
+
+  --help         Display help text
+  -h, --host     Database server host [default: localhost]
+  -p, --port     Database server port
+  --dbname       Database name [default: users]
+  -x             Output data in XML
+  -v, --verbose  Verbosity level
+  -o, --output   Output file
+```
 
 ### Subcommands
 

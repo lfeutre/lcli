@@ -13,6 +13,13 @@
     #m(long "output" short #\o type string help "Output file")))
 
 (defun main ()
-  (lfe_io:format "~p~n" `(,(lcli:parse (options)))))
+  (case (lcli:parse (options))
+    (`(,_ #(opts #m(help true)) ,_ ,_)
+     (lcli:usage (options) "db.lfe")
+     (halt 0))
+    (result
+     (lfe_io:format "~p~n" `(,result))
+     (halt 0)))
+  'ok)
 
 (main)

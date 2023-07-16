@@ -56,7 +56,7 @@
 (defun usage (specs script)
   "Wrap the `(getopt:usage)` function while providing support for command
   usage."
-  (getopt:usage specs script)
+  (getopt:usage (lcli-opts:maybe-maps-> specs) script)
   (if (lcli-cmds:has-commands? specs)
     (command-usage (lcli-opts:get 'commands specs))))
 
