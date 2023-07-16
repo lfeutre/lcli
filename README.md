@@ -78,12 +78,9 @@ A simple script below demonstrates lcli's wrappage of the Erlang getopt library:
 
 (defun options ()
   '(#m(long "help" help "Display help text")
-    #m(long "host" short #\h type string default "localhost"
-       help "Database server host")
-    #m(long "port" short #\p type integer
-       help "Database server port")
-    #m(long "dbname" type string default "users"
-       help "Database name")
+    #m(long "host" short #\h type string default "localhost" help "Database server host")
+    #m(long "port" short #\p type integer help "Database server port")
+    #m(long "dbname" type string default "users" help "Database name")
     #m(name xml short #\x help "Output data in XML")
     #m(long "verbose" short #\v type integer help "Verbosity level")
     #m(long "output" short #\o type string help "Output file")))
@@ -107,7 +104,7 @@ Test run:
 $ ./examples/db.lfe -x --port 5099 --dbname webapp -o output.dump arg1 arg2
 ```
 
-Output
+Output:
 
 ``` cl
 (#(cmd "./examples/db.lfe")
@@ -144,9 +141,8 @@ Usage: db.lfe [--help] [-h [<host>]] [-p <port>] [--dbname [<dbname>]]
 More sophisticated usage can create subcommands, etc., for creating command line tools with potentially vast arrays of functionality:
 
 ```cl
-
+TBD
 ```
-
 
 ## Documentation [&#x219F;](#table-of-contents)
 
