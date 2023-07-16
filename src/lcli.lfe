@@ -7,7 +7,7 @@
   (logjam:set-dev-config))
 
 (defun parse (specs)
-  (parse specs (lcli-args:get-raw)))
+  (parse specs (lcli-args:raw)))
 
 ;; TODO: change 2nd arg to map
 (defun parse
@@ -51,7 +51,7 @@
 
 (defun usage (specs)
   "Wrap the `(getopt:usage)` function, providing the computed script name."
-  (usage specs (lcli-args:get-script)))
+  (usage specs (lcli-args:script)))
 
 (defun usage (specs script)
   "Wrap the `(getopt:usage)` function while providing support for command
