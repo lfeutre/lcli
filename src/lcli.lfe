@@ -9,12 +9,14 @@
 (defun parse (specs)
   (parse specs (lcli-args:get-raw)))
 
+;; TODO: change 2nd arg to map
 (defun parse
   ((specs `(#(script ,script) #(args ,args)))
    (if (lcli-cmds:has-commands? specs)
      (parse-with-commands script args specs)
      (parse-without-commands script args specs))))
 
+;; TODO: change output to map
 (defun parse-with-commands (script args specs)
   (let* ((opts-only-spec (lcli-opts:filter-specs specs))
          (`#m(opts ,opts args ,args) (lcli-opts:parse opts-only-spec args))
@@ -24,8 +26,9 @@
       #(args ,args)
       #(cmds ,(parse-commands commands)))))
 
+;; TODO: change output to map
 (defun parse-without-commands (script args specs)
-  (let ((`#(,opts ,args) (lcli-opts:parse specs args)))
+  (let ((`#m(opts ,opts args ,args) (lcli-opts:parse specs args)))
     `(#(cmd ,script)
       #(opts ,opts)
       #(args ,args)
