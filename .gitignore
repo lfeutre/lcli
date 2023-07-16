@@ -34,3 +34,4 @@ rebar.lock
 /doc/*
 /priv/output/*
 /docs/user-guide/build/*
+/workbench/*

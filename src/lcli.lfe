@@ -7,25 +7,25 @@
   (logjam:set-dev-config))
 
 (defun parse (specs)
-  (parse specs (lcli-args:get-raw-args)))
+  (parse specs (lcli-args:get-raw)))
 
 (defun parse
   ((specs `(#(script ,script) #(args ,args)))
-    (if (lcli-cmds:has-commands? specs)
-      (parse-with-commands script args specs)
-      (parse-without-commands script args specs))))
+   (if (lcli-cmds:has-commands? specs)
+     (parse-with-commands script args specs)
+     (parse-without-commands script args specs))))
 
 (defun parse-with-commands (script args specs)
   (let* ((opts-only-spec (lcli-opts:filter-specs specs))
-       (`#(,opts ,args) (lcli-opts:parse-opts opts-only-spec args))
-       (commands (lcli-opts:get-opt 'commands specs)))
-  `(#(cmd ,script)
-    #(opts ,opts)
-    #(args ,args)
-    #(cmds ,(parse-commands commands)))))
+         (`#m(opts ,opts args ,args) (lcli-opts:parse opts-only-spec args))
+         (commands (lcli-opts:get 'commands specs)))
+    `(#(cmd ,script)
+      #(opts ,opts)
+      #(args ,args)
+      #(cmds ,(parse-commands commands)))))
 
 (defun parse-without-commands (script args specs)
-  (let ((`#(,opts ,args) (lcli-opts:parse-opts specs args)))
+  (let ((`#(,opts ,args) (lcli-opts:parse specs args)))
     `(#(cmd ,script)
       #(opts ,opts)
       #(args ,args)
@@ -33,11 +33,11 @@
 
 (defun parse-command
   ((`#(,cmd #(opts ,opts)))
-    `#(,cmd #(opts ,(parse opts))))
+   `#(,cmd #(opts ,(parse opts))))
   ((command)
-    (log-error "Couldn't parse: ~p" `(,command))
-    (timer:sleep 250)
-    command))
+   (log-error "Couldn't parse: ~p" `(,command))
+   (timer:sleep 250)
+   command))
 
 (defun parse-commands (commands)
   (lists:map #'parse-command/1 commands))
@@ -47,15 +47,15 @@
   (lfe_io:format "Commands:~n" '()))
 
 (defun usage (specs)
-  "Wrap the ``(getopt:usage)`` function, providing the computed script name."
+  "Wrap the `(getopt:usage)` function, providing the computed script name."
   (usage specs (lcli-args:get-script)))
 
 (defun usage (specs script)
-  "Wrap the ``(getopt:usage)`` function while providing support for command
+  "Wrap the `(getopt:usage)` function while providing support for command
   usage."
   (getopt:usage specs script)
   (if (lcli-cmds:has-commands? specs)
-    (command-usage (lcli-opts:get-opt 'commands specs))))
+    (command-usage (lcli-opts:get 'commands specs))))
 
 (defun get-spec (key specs)
   "Given the key for a spec and a list of specs, return the first spec that
