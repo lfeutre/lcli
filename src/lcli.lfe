@@ -12,13 +12,13 @@
 ;; TODO: change 2nd arg to map
 (defun parse
   ((specs `(#(script ,script) #(args ,args)))
-   (if (lcli-cmds:has-commands? specs)
+   (if (lcli-cmds:commands? specs)
      (parse-with-commands script args specs)
      (parse-without-commands script args specs))))
 
 ;; TODO: change output to map
 (defun parse-with-commands (script args specs)
-  (let* ((opts-only-spec (lcli-opts:filter-specs specs))
+  (let* ((opts-only-spec (lcli-cmds:filter specs))
          (`#m(opts ,opts args ,args) (lcli-opts:parse opts-only-spec args))
          (commands (lcli-opts:get 'commands specs)))
     `(#(cmd ,script)
@@ -56,8 +56,8 @@
 (defun usage (specs script)
   "Wrap the `(getopt:usage)` function while providing support for command
   usage."
-  (getopt:usage (lcli-opts:maybe-maps-> specs) script)
-  (if (lcli-cmds:has-commands? specs)
+  (lcli-opts:usage specs script)
+  (if (lcli-cmds:commands? specs)
     (command-usage (lcli-opts:get 'commands specs))))
 
 (defun get-spec (key specs)
