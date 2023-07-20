@@ -1,6 +1,6 @@
 {application, lcli, [
   {description, "An LFE Command Line Options & Tool Builder"},
-  {vsn, "0.2.0-dev"},
+  {vsn, "0.1.1"},
   {modules, [lcli]},
   {registered, []},
   {applications, [kernel, stdlib]},
