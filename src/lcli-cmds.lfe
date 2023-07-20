@@ -1,5 +1,7 @@
 (defmodule lcli-cmds
-  (export all))
+  (export
+   (commands? 1)
+   (filter 1)))
 
 (defun key () 'commands)
 
@@ -9,9 +11,19 @@
   (('())
    'false)
   ((specs)
-   (if (lcli-util:speclist? specs)
-     (speclist-has-commands? specs)
-     (maps-has-commands? specs))))
+   (cond ((lcli-util:speclist? specs) (speclist-has-commands? specs))
+         ((lcli-util:maplist? specs) (maplist-has-commands? specs))
+         ((is_tuple specs) (spec-has-commands? specs))
+         ((is_map specs) (map-has-commands? specs)))))
+
+
+(defun filter (specs)
+  "In a list of specs, return only those that are true option specs, not those
+  that are lcli-specific 'commands specs'."
+  (lists:filtermap #'spec-without-commands?/1
+                   (lcli-spec:->maps specs)))
+
+;;; Private functions
 
 (defun speclist-has-commands?
   "This function is intended to be used with specs that are in the form defined
@@ -29,13 +41,13 @@
     (== (element 1 spec) (key))
     (is_list (element 2 spec)))))
 
-(defun maps-has-commands?
+(defun maplist-has-commands?
   (('())
    'false)
   ((`(,spec . ,rest))
    (if (map-has-commands? spec)
      'true
-     (maps-has-commands? rest))))
+     (maplist-has-commands? rest))))
 
 (defun map-has-commands?
   ((spec) (when (is_map spec))
@@ -51,9 +63,3 @@
    (not (map-has-commands? spec)))
   ((spec) (when (is_tuple spec))
    (not (spec-has-commands? spec))))
-
-(defun filter (specs)
-  "In a list of specs, return only those that are true option specs, not those
-  that are lcli-specific 'commands specs'."
-  (lists:filtermap #'spec-without-commands?/1
-                   (lcli-spec:->maps specs)))

@@ -35,17 +35,14 @@
   (is-equal 'false (lcli-cmds:commands? (specs-3)))
   (is-equal 'true (lcli-cmds:commands? (specs-4))))
 
-(deftest spec-has-commands?
-  (is-equal '(false) (lists:map #'lcli-cmds:spec-has-commands?/1 (specs-1)))
-  (is-equal '(false false) (lists:map #'lcli-cmds:spec-has-commands?/1 (specs-2)))
-  (is-equal '(false false false) (lists:map #'lcli-cmds:spec-has-commands?/1 (specs-3)))
-  (is-equal '(false false true) (lists:map #'lcli-cmds:spec-has-commands?/1 (specs-4))))
+(deftest commands-specs?
+  (is-equal '(false) (lists:map #'lcli-cmds:commands?/1 (specs-1)))
+  (is-equal '(false false) (lists:map #'lcli-cmds:commands?/1 (specs-2)))
+  (is-equal '(false false false) (lists:map #'lcli-cmds:commands?/1 (specs-3)))
+  (is-equal '(false false true) (lists:map #'lcli-cmds:commands?/1 (specs-4))))
 
-(deftest spec-not-commands?
-  (is-equal (specs-1) (lists:filtermap #'lcli-cmds:spec-without-commands?/1 (specs-1)))
-  (is-equal (specs-2) (lists:filtermap #'lcli-cmds:spec-without-commands?/1 (specs-2)))
-  (is-equal (specs-3) (lists:filtermap #'lcli-cmds:spec-without-commands?/1 (specs-3)))
-  (is-equal (specs-2) (lists:filtermap #'lcli-cmds:spec-without-commands?/1 (specs-4))))
+(deftest commands-maps?
+  (is-equal '(false false true) (lists:map #'lcli-cmds:commands?/1 (specs-5))))
 
 (deftest filter-commands
   (is-equal (lcli-spec:->maps (specs-1)) (lcli-cmds:filter (specs-1)))
