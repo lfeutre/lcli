@@ -10,10 +10,14 @@
 ;;;;
 ;;;;   $ ./examples/simple.lfe --greeting "Hello" --greetee "World"
 ;;;;
-(let ((plain-args (init:get_plain_arguments))
-      (`(#(script ,script) #(args ,args)) (lcli:get-raw-args)))
-  (lfe_io:format "Plain args: ~p~n" `(,plain-args))
-  (lfe_io:format "Helper script name: ~p~n" `(,script-name))
-  (lfe_io:format "Helper script args: ~p~n" `(,script-args))
-  (lfe_io:format "Script name: ~p~n" `(,script))
-  (lfe_io:format "Script args: ~p~n" `(,args)))
+
+(defun main ()
+  (let ((plain-args (init:get_plain_arguments))
+        (`(#(script ,script) #(args ,args)) (lcli-args:get-raw)))
+    (lfe_io:format "Plain args: ~p~n" `(,plain-args))
+    (lfe_io:format "Helper script name: ~p~n" `(,script-name))
+    (lfe_io:format "Helper script args: ~p~n" `(,script-args))
+    (lfe_io:format "Script name: ~p~n" `(,script))
+    (lfe_io:format "Script args: ~p~n" `(,args))))
+
+(main)

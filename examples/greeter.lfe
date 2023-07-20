@@ -13,31 +13,32 @@
 ;;;;   $ ./examples/simple-parse1.lfe -g "Awwww, "
 ;;;;   Awwww, World!
 ;;;;
-;;;;   $ ./examples/simple-parse1.lfe -e "Mr. Bill!"
+;;;;   $ ./examples/simple-parse1.lfe -e 'Mr. Bill!'
 ;;;;   Hello, Mr. Bill!
 ;;;;
-;;;;   $ ./examples/simple-parse1.lfe -g "Awwww, " -e "Nuts!"
+;;;;   $ ./examples/simple-parse1.lfe -g "Awwww, " -e 'Nuts!'
 ;;;;   Awwww, Nuts!
 ;;;;
-;;;;   $ ./examples/simple-parse1.lfe --greeting "On, no! " -e "Nuts!"
+;;;;   $ ./examples/simple-parse1.lfe --greeting 'On, no! ' -e 'Nuts!'
 ;;;;   On, no! Nuts!
 ;;;;
-;;;;   $ ./examples/simple-parse1.lfe --greeting "On, no! " --greetee "Mr. Bill!"
+;;;;   $ ./examples/simple-parse1.lfe --greeting 'On, no! ' --greetee 'Mr. Bill!'
 ;;;;   On, no! Mr. Bill!
 ;;;;
-(defun opt-spec ()
-  `(#(greeting #\g "greeting" #(string "Hello, ") "A greeting for someone.")
+(defun options ()
+  `(#(help #\h "help" undefined "Display this help text.")
+    #(greeting #\g "greeting" #(string "Hello, ") "A greeting for someone.")
     #(greetee #\e "greetee" #(string "World!") "Someone or something to greet.")))
 
 (defun main ()
-  (case (lcli:parse (opt-spec))
-    (`(,_ #(opts ,opts) ,_)
+  (case (lcli:parse (options))
+    (`(,_ #(opts #m(help true)) ,_ ,_)
+     (lcli:usage (options)))
+    (`(,_ #(opts ,opts) ,_ ,_)
       (io:format "~s~s~n"
-                 `(,(lcli:get-opt 'greeting opts)
-                   ,(lcli:get-opt 'greetee opts)))
-      (halt 0))
-    (result
-      (error result)
-      (halt 1))))
+                 `(,(maps:get 'greeting opts)
+                   ,(maps:get 'greetee opts)))
+      (halt 0)))
+  'ok)
 
 (main)

@@ -9,5 +9,9 @@
 ;;;;
 ;;;;   $ ./examples/init-only.lfe --greeting "Hello" --greetee "World"
 ;;;;
-(let ((args (init:get_plain_arguments)))
-  (lfe_io:format "Args: ~p~n" `(,args)))
+
+(defun main ()
+  (let ((args (init:get_plain_arguments)))
+    (lfe_io:format "Args: ~p~n" `(,args))))
+
+(main)
