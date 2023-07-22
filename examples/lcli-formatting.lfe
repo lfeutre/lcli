@@ -1,7 +1,5 @@
 #!/usr/bin/env lfe
 
-(include-lib "lcli/include/records.lfe")
-
 (defun command ()
   `#m(name "git clone"
       options (#m(long "help" help "Display help text")
