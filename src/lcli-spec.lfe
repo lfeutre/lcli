@@ -1,10 +1,17 @@
 (defmodule lcli-spec
   (export
+   (-> 2)
    (->map 1)
    (->maps 1)
    (map-> 1)
    (maps-> 1)
-   (new-map 0) (new-map 1) (new-map 5) (new-map 6)))
+   (new-map 0) (new-map 1) (new-map 5) (new-map 6)
+   (record-> 2))
+  ;; Just to make xref shut up about an include
+  (export
+   (--loaded-lcli-records-- 0)))
+
+(include-lib "lcli/include/records.lfe")
 
 (defun new-map ()
   #m(short undefined
@@ -25,6 +32,23 @@
       type ,type
       default ,default
       help ,help))
+
+(defun ->
+  ;; is it a list?
+  ((data type) (when (is_list data))
+   (cond ((lcli-util:recordlist? data type) (lists:map (lambda (x) (record-> x type)) data))
+         ((lcli-util:speclist? data) data)
+         ((lists:map #'map->/1 data))))
+  ;; is it a record?
+  ((data 'option) (when (is_record data 'option))
+   (record-> data 'option))
+  ;; is the data already a spec?
+  ((data _) (when (or (is_tuple data) (is_atom data)))
+   data)
+  ((data _) (when (and (is_map data) (== (map_size data) 0)))
+   '())
+  ((data _) (when (is_map data))
+   (map-> data)))
 
 (defun map->
   ;; is the data already a spec?
@@ -74,7 +98,27 @@
   ((`#(commands ,vals))
    `#m(commands ,vals)))
 
+(defun record->
+  (((match-option name n short s long l type t default d help h) 'option)
+   (map-> (clean-map `#m(name ,n short ,s long ,l type ,t default ,d help ,h)))))
+
 ;;; Private functions
+
+(defun clean-map (map-data)
+  (maps:from_list
+   (lists:foldl #'clean-map/2
+                '()
+                (maps:to_list map-data))))
+
+(defun clean-map
+  ((`#(,_ undefined) acc)
+   acc)
+  ((`#(short 0) acc)
+   acc)
+  ((`#(long "") acc)
+   acc)
+  ((kv acc)
+   (lists:append acc (list kv))))
 
 (defun ->map (name short long arg-spec help)
   "Convert an Erlang getopt spec (`type option_spec`) to a map."

@@ -7,7 +7,7 @@
    (default-indent 0))
   ;; public funs
   (export
-   (compile 2) (compile 3)
+   (compile 1) (compile 2)
    (description 1) (description 3)
    (options 1) (options 2) (options 4)
    (synopsis 2) (synopsis 3) (synopsis 5)
@@ -44,10 +44,10 @@
   ((filename)
    (bbmustache:parse_file filename)))
 
-(defun compile (options help)
-  (compile options help 'manpage))
+(defun compile (help)
+  (compile help 'manpage))
 
-(defun compile (options help template-name)
+(defun compile (help template-name)
   (let ((bbm-map `#m(title-heading ,(help-title-heading help)
                      title ,(help-title help)
                      synopsis-heading ,(help-synopsis-heading help)
@@ -67,7 +67,7 @@
   (synopsis cmd options args (default-width) (default-indent)))
 
 (defun synopsis (cmd options args width indent)
-  (let ((specs (lcli-spec:maps-> options))
+  (let ((specs (lcli-spec:-> options 'option))
         (len (+ (length (getopt-usage-prefix)) 1)))
      (wrap-line
       (++ (string:substr (lists:flatten (getopt:usage_cmd_line cmd specs))
@@ -89,7 +89,7 @@
   (options options args (default-width) (default-indent)))
 
 (defun options (options args width indent)
-  (let ((specs (lcli-spec:maps-> options)))
+  (let ((specs (lcli-spec:-> options 'option)))
     (string:trim (getopt:usage_options specs (args-options args))
                  'both "\n")))
 
@@ -103,9 +103,17 @@
   (lists:foldl #'arg-synopsis/2 "" args))
 
 (defun arg-synopsis
+  (((match-arg name name required required) acc)
+   (arg-synopsis name required acc))
   ((`#m(name ,name required true) acc)
-   (io_lib:format "~s <~s>" (list acc name)))
+   (arg-synopsis name 'true acc))
   ((`#m(name ,name) acc)
+   (arg-synopsis name 'false acc)))
+
+(defun arg-synopsis
+  ((name 'true acc)
+   (io_lib:format "~s <~s>" (list acc name)))
+  ((name _ acc)
    (io_lib:format "~s [<~s>]" (list acc name))))
 
 (defun args-options
@@ -115,10 +123,20 @@
    (lists:map #'arg-option/1 args)))
 
 (defun arg-option
+  (((match-arg name name help help)) (when (== help ""))
+   (arg-option name 'undefined))
+  (((match-arg name name help help))
+   (arg-option name help))
   ((`#m(name ,name help ,help))
-   `#(,(++ "<" name ">") ,help))
+   (arg-option name help))
   ((`#m(name ,name))
-   `#(,(++ "<" name ">") "")))
+   (arg-option name 'undefined)))
+
+(defun arg-option
+  ((name 'undefined)
+   `#(,(++ "<" name ">") ""))
+  ((name help)
+   `#(,(++ "<" name ">") ,help)))
 
 (defun wrap-line (text width indent)
   (string:trim

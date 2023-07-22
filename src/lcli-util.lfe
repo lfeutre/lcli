@@ -1,6 +1,7 @@
 (defmodule lcli-util
   (export
    (maplist? 1)
+   (recordlist? 2)
    (speclist? 1)
    (tuplelist? 1)))
 
@@ -10,6 +11,14 @@
   ((l) (when (is_list l))
    (lists:all #'is_map/1 l))
   ((_)
+   'false))
+
+(defun recordlist?
+  (('() record-type)
+   'false)
+  ((l record-type) (when (is_list l))
+   (lists:all (lambda (x) (is_record x record-type)) l))
+  ((_ _)
    'false))
 
 (defun speclist?

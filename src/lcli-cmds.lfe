@@ -30,23 +30,29 @@
                    (lcli-spec:->maps specs)))
 
 (defun usage
-  ((`#m(name ,name options ,options args ,args help ,raw-help))
-   (let* ((desc (lcli-usage:description (mref raw-help 'description)))
-          (synop (lcli-usage:synopsis name options args))
-          (opts (lcli-usage:options options args))
-          (help-title (io_lib:format "~s - ~s" (list name (mref raw-help 'title))))
-          (help (make-help title help-title
+  (((match-command name n title t description d options os args as))
+   (usage n t d os as))
+  ((`#m(name ,n title ,t description ,d options ,os args ,as))
+   (usage n t d os as)))
+
+;;; Private functions
+
+(defun usage (name title desc opts args)
+   (let* ((desc (lcli-usage:description desc))
+          (synop (lcli-usage:synopsis name opts args))
+          (opts (lcli-usage:options opts args))
+          (title (io_lib:format "~s - ~s" (list name title)))
+          (help (make-help title title
                            description desc
                            synopsis synop
                            options opts)))
-     (io:format "~s~n" (list (lcli-usage:compile opts help))))))
-
-;;; Private functions
+     (io:format "~s~n" (list (lcli-usage:compile help)))))
 
 (defun speclist-has-commands?
   "This function is intended to be used with specs that are in the form defined
   by the Erlang getopt library."
   (('())
+
    'false)
   ((`(,spec . ,rest))
    (if (spec-has-commands? spec)

@@ -6,6 +6,18 @@
   (name "" (string))
   (order 0 (integer)))
 
+(defrecord command
+  (name "" (string))
+  (title "" (string))
+  (description "" (string))
+  (subcommands '() (list))
+  (options '() (list))
+  (args '() (list))
+  (order 0 (integer))
+  (groups '() (list))
+  ;;(runner 'undefined (lambda)))
+  (runner 'undefined (any)))
+
 (defrecord option
   (name 'undefined (atom))
   (short 0 (integer))
@@ -22,17 +34,10 @@
   (order 0 (integer))
   (groups '() (list)))
 
-(defrecord command
+(defrecord arg
   (name "" (string))
-  (help "" (string))
-  (usage "" (string))
-  (description "" (string))
-  (subcommands '() (list))
-  (options '() (list))
-  (order 0 (integer))
-  (groups '() (list))
-  ;;(runner 'undefined (lambda)))
-  (runner 'undefined (any)))
+  (required 'false (atom))
+  (help "" (string)))
 
 (defrecord help
   (title-heading "NAME" (string))
