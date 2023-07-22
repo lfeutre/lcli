@@ -32,6 +32,6 @@
               (option-help r))))
 
 (deftest help-record
-  (let ((r (make-help name "git-clone - Clone a repository into a new directory")))
-    (is-equal "git-clone - Clone a repository into a new directory"
-              (help-name r))))
+  (let ((r (make-help title "Clone a repository into a new directory")))
+    (is-equal "Clone a repository into a new directory"
+              (help-title r))))
