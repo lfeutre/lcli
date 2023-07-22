@@ -12,7 +12,10 @@
    (options 1) (options 2) (options 4)
    (synopsis 2) (synopsis 3) (synopsis 5)
    (template-file 1)
-   (template 0) (template 1)))
+   (template 0) (template 1))
+  ;; Just to make xref shut up about an include
+  (export
+   (--loaded-lcli-records-- 0)))
 
 (include-lib "lcli/include/records.lfe")
 

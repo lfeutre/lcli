@@ -2,7 +2,10 @@
   (export
    (commands? 1)
    (filter 1)
-   (usage 1)))
+   (usage 1))
+  ;; Just to make xref shut up about an include
+  (export
+   (--loaded-lcli-records-- 0)))
 
 (include-lib "lcli/include/records.lfe")
 
