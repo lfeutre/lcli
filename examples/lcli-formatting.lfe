@@ -28,7 +28,7 @@
 (defun main ()
   (lcli-cmds:usage (command)))
 
-;;(main)
+(main)
 
 (io:format "~n*** Or, this could also be done using lcli records ***~n" '())
 

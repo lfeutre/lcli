@@ -38,15 +38,15 @@
 ;;; Private functions
 
 (defun usage (name title desc opts args)
-   (let* ((desc (lcli-usage:description desc))
-          (synop (lcli-usage:synopsis name opts args))
-          (opts (lcli-usage:options opts args))
-          (title (io_lib:format "~s - ~s" (list name title)))
-          (help (make-help title title
-                           description desc
-                           synopsis synop
-                           options opts)))
-     (io:format "~s~n" (list (lcli-usage:compile help)))))
+  (let* ((desc (lcli-usage:description desc))
+         (synop (lcli-usage:synopsis name opts args))
+         (opts (lcli-usage:options opts args))
+         (title (io_lib:format "~s - ~s" (list name title)))
+         (help (make-help title title
+                          description desc
+                          synopsis synop
+                          options opts)))
+    (io:format "~s~n" (list (lcli-usage:compile help)))))
 
 (defun speclist-has-commands?
   "This function is intended to be used with specs that are in the form defined
