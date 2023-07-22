@@ -1,7 +1,10 @@
 (defmodule lcli-cmds
   (export
    (commands? 1)
-   (filter 1)))
+   (filter 1)
+   (usage 1)))
+
+(include-lib "lcli/include/records.lfe")
 
 (defun key () 'commands)
 
@@ -22,6 +25,18 @@
   that are lcli-specific 'commands specs'."
   (lists:filtermap #'spec-without-commands?/1
                    (lcli-spec:->maps specs)))
+
+(defun usage
+  ((`#m(name ,name options ,options args ,args help ,raw-help))
+   (let* ((desc (lcli-usage:description (mref raw-help 'description)))
+          (synop (lcli-usage:synopsis name options args))
+          (opts (lcli-usage:options options args))
+          (help-title (io_lib:format "~s - ~s" (list name (mref raw-help 'title))))
+          (help (make-help title help-title
+                           description desc
+                           synopsis synop
+                           options opts)))
+     (io:format "~s~n" (list (lcli-usage:compile opts help))))))
 
 ;;; Private functions
 

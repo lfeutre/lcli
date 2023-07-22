@@ -2,6 +2,7 @@
   (export all))
 
 (include-lib "logjam/include/logjam.hrl")
+(include-lib "lcli/include/records.lfe")
 
 (defun start ()
   (logjam:set-dev-config))
