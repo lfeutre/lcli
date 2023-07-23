@@ -1,9 +1,15 @@
 (defrecord app
   (name "app" (string))
+  (title "" (string))
+  (description "" (string))
+  (options '() (list))
+  (args '() (list))
+  (commands '() (list))
   (with-colour 'true (atom)))
 
 (defrecord group
-  (name "" (string))
+  (name 'undefined (atom))
+  (summary "" (string))
   (order 0 (integer)))
 
 (defrecord command
@@ -49,15 +55,6 @@
   (options-heading "OPTIONS" (string))
   (options "" (string))
   (additional "" (string)))
-
-;; For compat with Erlang getopt ... maybe not neccesary?
-
-(defrecord spec
-  (name 'undefined (atom))
-  (short 0 (integer))
-  (long "" (string))
-  (arg '() (list))
-  (help "" (string)))
 
 (defun --loaded-lcli-records-- ()
   "This is just a dummy function for display purposes when including from the

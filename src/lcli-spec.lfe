@@ -36,10 +36,14 @@
 (defun ->
   ;; is it a list?
   ((data type) (when (is_list data))
-   (cond ((lcli-util:recordlist? data type) (lists:map (lambda (x) (record-> x type)) data))
-         ((lcli-util:speclist? data) data)
-         ((lcli-util:maplist? data) (lists:map #'map->/1 data))
-         ('true (lfe_io:format "Didn't match list: ~p" (list data)))))
+   (cond ((lcli-util:recordlist? data type)
+          (lists:map (lambda (x) (record-> x type)) data))
+         ((lcli-util:speclist? data)
+          data)
+         ((lcli-util:maplist? data)
+          (lists:map #'map->/1 data))
+         ('true
+          (lfe_io:format "Didn't match list: ~p" (list data)))))
   ;; is it a record?
   ((data 'option) (when (is_record data 'option))
    (record-> data 'option))
