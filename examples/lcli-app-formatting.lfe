@@ -1,13 +1,20 @@
 #!/usr/bin/env lfe
+;;;; This is one of the more complicated examples, showcasing an app with its
+;;;; commands, subcommands, option composition, etc. If this is more than what
+;;;; you need, consider looking at one of the other examples.
 
 ;;; Common options
+
 (defun help () #m(long "help" short #\h help "Display help text"))
 (defun quiet () #m(long "quiet" short #\q help "Operate quietly"))
 (defun verbose () #m(long "verbose" short #\v help "Run verbosely"))
 (defun branch () #m(long "branch" short #\b type string help "Use the specified name"))
 
 ;;; Common args
+
 (defun directory () #m(name "directory" help "The name of a new directory to clone into"))
+
+;;; Commands
 
 (defun git-clone ()
   `#m(name "git clone"
@@ -43,6 +50,8 @@
                ,(quiet)
                ,(branch))
       args (,(directory))))
+
+;;; Application / collection of commands
 
 (defun app ()
   `#(name "git"
