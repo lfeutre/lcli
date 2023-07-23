@@ -54,6 +54,8 @@
   (description "" (string))
   (options-heading "OPTIONS" (string))
   (options "" (string))
+  (commands-heading "COMMANDS" (string))
+  (commands "" (string))
   (additional "" (string)))
 
 (defun --loaded-lcli-records-- ()

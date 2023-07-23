@@ -32,8 +32,12 @@
 (defun usage
   (((match-command name n title t description d options os args as))
    (usage n t d os as))
+  ((`#m(name ,n title ,t description ,d options ,os args ,as commands ,cs))
+   (usage n t d os as cs))
   ((`#m(name ,n title ,t description ,d options ,os args ,as))
-   (usage n t d os as)))
+   (usage n t d os as))
+  ((data)
+   (lfe_io:format "Could not match input for usage type: ~p~n" (list data))))
 
 ;;; Private functions
 
@@ -47,6 +51,19 @@
                           synopsis synop
                           options opts)))
     (io:format "~s~n" (list (lcli-usage:compile help)))))
+
+(defun usage (name title desc opts args cmds)
+  (let* ((desc (lcli-usage:description desc))
+         (synop (lcli-usage:synopsis name opts args))
+         (opts (lcli-usage:options opts args))
+         (title (io_lib:format "~s - ~s" (list name title)))
+         (cmds (lcli-usage:commands cmds))
+         (help (make-help title title
+                          description desc
+                          synopsis synop
+                          options opts
+                          commands cmds)))
+    (io:format "~s~n" (list (lcli-usage:compile help 'app-manpage)))))
 
 (defun speclist-has-commands?
   "This function is intended to be used with specs that are in the form defined

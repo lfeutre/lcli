@@ -54,24 +54,27 @@
 ;;; Application / collection of commands
 
 (defun app ()
-  `#(name "git"
-     title "A command line tool for the version control system"
-     description "Just what it says on the tin"
-     options (,(help)
-              ,(verbose)
-              #m(long "version" help "show the version")
-              #m(long "namespace" help "set the namespace"))
-     args (#m(name "command" required true help "the command to execute")
-           #m(name "args" help "additional arguments required or accepted by the command"))
-     commands (,(git-init)
-               ,(git-clone))))
-               
+  `#m(name "git"
+      title "A command line tool for the version control system"
+      description "Just what it says on the tin"
+      options (,(help)
+               ,(verbose)
+               #m(long "version" help "show the version")
+               #m(long "namespace" help "set the namespace"))
+      args (#m(name "command" required true help "the command to execute")
+            #m(name "args" help "additional arguments required or accepted by the command"))
+      commands (,(git-init)
+                ,(git-clone))))
+
 (defun main ()
   (lcli-cmds:usage (app)))
 
 (main)
 
-(io:format "~n*** Or, this could also be done using lcli records ***~n" '())
+(io:format "************************************************~n~n~n")
+(io:format " Or, this could also be done using lcli records~n")
+(io:format "                 (see below ...)~n~n~n")
+(io:format "************************************************~n")
 
 (include-lib "lcli/include/records.lfe")
 

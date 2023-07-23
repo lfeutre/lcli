@@ -7,6 +7,7 @@
    (default-indent 0))
   ;; public funs
   (export
+   (commands 1)
    (compile 1) (compile 2)
    (description 1) (description 3)
    (options 1) (options 2) (options 4)
@@ -22,11 +23,14 @@
 ;;; Constants
 
 (defun template-dir () "templates")
-(defun template-file () 'manpage)
+(defun default-template () 'manpage)
 (defun default-width () 72)
 (defun default-indent () 2)
 
 ;;; Public functions
+
+(defun template-file ()
+  (template-file (default-template)))
 
 (defun template-file (name)
   (io_lib:format "~s/~s/~s.mustache" (list (code:priv_dir 'lcli)
@@ -37,8 +41,8 @@
   (template (template-file)))
 
 (defun template
-  ((name) (when (is_atom name))
-   (template (template-file name)))
+  ((template-name) (when (is_atom template-name))
+   (template (template-file template-name)))
   ((filename) (when (is_list filename))
    (template (list_to_binary filename)))
   ((filename)
@@ -56,6 +60,8 @@
                      description ,(help-description help)
                      options-heading ,(help-options-heading help)
                      options ,(help-options help)
+                     commands-heading ,(help-commands-heading help)
+                     commands ,(help-commands help)
                      additional ,(help-additional help))))
     (bbmustache:compile (template template-name) bbm-map `(#(key_type atom)
                                                            #(escape_fun ,(lambda (x) x))))))
@@ -92,6 +98,10 @@
   (let ((specs (lcli-spec:-> options 'option)))
     (string:trim (getopt:usage_options specs (args-options args))
                  'both "\n")))
+
+(defun commands (cmds)
+  (string:trim (getopt:usage_options '() (cmds-options cmds))
+               'both "\n"))
 
 ;;; Private constants
 
@@ -137,6 +147,28 @@
    `#(,(++ "<" name ">") ""))
   ((name help)
    `#(,(++ "<" name ">") ,help)))
+
+(defun cmds-options
+  (('())
+   '())
+  ((cmds)
+   (lists:map #'cmd-option/1 cmds)))
+
+(defun cmd-option
+  (((match-command name name title title)) (when (== title ""))
+   (cmd-option name 'undefined))
+  (((match-command name name title title))
+   (cmd-option name title))
+  ((`#m(name ,name title ,title))
+   (cmd-option name title))
+  ((`#m(name ,name))
+   (cmd-option name 'undefined)))
+
+(defun cmd-option
+  ((name 'undefined)
+   `#(,name ""))
+  ((name title)
+   `#(,name ,title)))
 
 (defun wrap-line (text width indent)
   (string:trim
