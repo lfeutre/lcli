@@ -30,10 +30,13 @@
                    (lcli-spec:->maps specs)))
 
 (defun usage
-  (((match-command name n title t description d options os args as))
-   (usage n t d os as))
+  ;; Check for apps
+  (((match-app name n title t description d options os args as commands cs))
+   (usage n t d os as cs))
   ((`#m(name ,n title ,t description ,d options ,os args ,as commands ,cs))
    (usage n t d os as cs))
+  (((match-command name n title t description d options os args as))
+   (usage n t d os as))
   ((`#m(name ,n title ,t description ,d options ,os args ,as))
    (usage n t d os as))
   ((data)

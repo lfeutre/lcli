@@ -12,7 +12,7 @@
 
 ;;; Common args
 
-(defun directory () #m(name "directory" help "The name of a new directory to clone into"))
+(defun directory () #m(name "directory" help "The name of a new directory to use"))
 
 ;;; Commands
 
@@ -78,44 +78,103 @@
 
 (include-lib "lcli/include/records.lfe")
 
-(defun command ()
+;;; Common options
+
+(defun help ()
+  (make-option long "help"
+               help "Display help text"))
+
+(defun quiet ()
+  (make-option long "quiet"
+               short #\q
+               help "Operate quietly"))
+
+(defun verbose ()
+  (make-option long "verbose"
+               short #\v
+               help "Run verbosely"))
+
+(defun branch ()
+  (make-option long "branch"
+               short #\b
+               type 'string
+               help "Use the specified name"))
+
+;;; Common args
+
+(defun directory ()
+  (make-arg name "directory"
+            help "The name of a new directory to use"))
+
+;;; Commands
+
+(defun git-clone ()
   (make-command name "git clone"
                 title "Clone a repository into a new directory"
-                description (++
-                  "Clones a repository into a newly created directory, "
-                  "creates remote-tracking branches for each branch in the "
-                  "cloned repository (visible using git branch --remotes), "
+                description (++ "Clones a repository into a newly created "
+                  "directory, creates remote-tracking branches for each branch "
+                  "in thecloned repository (visible using git branch --remotes), "
                   "and creates and checks out an initial branch that is "
                   "forked from the cloned repository's currently active"
                   "branch.")
                 options (list
-                  (make-option long "help"
-                               help "Display help text")
+                  (help)
+                  (verbose)
+                  (quiet)
+                  (branch)
                   (make-option long "local"
                                short #\l
                                help "When the repository to clone from is on a local machine")
-                  (make-option long "verbose"
-                               short #\v
-                               help "Run verbosely")
-                  (make-option long "quiet"
-                               short #\q
-                               help "Operate quietly")
                   (make-option long "origin"
                                short #\o
                                type 'string
-                               help "Instead of using the remote name")
-                  (make-option long "branch"
-                               short #\b
-                               type 'string
-                               help "Instead of pointing the newly created"))
+                               help "Instead of using the remote name"))
                 args (list
                   (make-arg name "repository"
                             required 'true
                             help "The (possibly remote) repository to clone from")
-                  (make-arg name "directory"
-                            help "The name of a new directory to clone into"))))
+                  (directory))))
+
+(defun git-init ()
+  (make-command name "git init"
+                title "Create an empty Git repository or reinitialize an existing one"
+                description (++ "This command creates an empty Git repository - "
+                  "basically a .git directory with subdirectories for "
+                  "objects, refs/heads, refs/tags, and template files. An "
+                  "initial branch without any commits will be created (see "
+                  "the --initial-branch option below for its name).")
+                options (list
+                  (help)
+                  (verbose)
+                  (quiet)
+                  (branch))
+                args (list
+                  (directory))))
+
+;;; Application / collection of commands
+
+(defun app ()
+  (make-app name "git"
+            title "A command line tool for the version control system"
+            description "Just what it says on the tin"
+            options (list
+              (help)
+              (verbose)
+              (make-option long "version"
+                           help "show the version")
+              (make-option long "namespace"
+                           help "set the namespace"))
+            args (list
+              (make-arg name "command"
+                        required 'true
+                        help "the command to execute")
+              (make-arg name "args"
+                        help "additional arguments required or accepted by the command"))
+            commands (list
+              (git-init)
+              (git-clone))))
 
 (defun main ()
-  (lcli-cmds:usage (command)))
+  (lcli-cmds:usage (app)))
 
 (main)
