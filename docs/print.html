@@ -3,7 +3,8 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Introduction - lcli</title>
+        <title>lcli</title>
+        <meta name="robots" content="noindex" />
 
 
         <!-- Custom HTML head -->
@@ -83,7 +84,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="intro/getopt.html"><strong aria-hidden="true">1.1.</strong> lcli and getopt</a></li><li class="chapter-item expanded "><a href="intro/lfescript.html"><strong aria-hidden="true">1.2.</strong> lfescript</a></li><li class="chapter-item expanded "><a href="intro/examples.html"><strong aria-hidden="true">1.3.</strong> Examples</a></li></ol></li><li class="chapter-item expanded "><a href="scripts/simple.html"><strong aria-hidden="true">2.</strong> Creating Simple Scripts</a></li><li class="chapter-item expanded "><a href="scripts/flags.html"><strong aria-hidden="true">3.</strong> Scripts with Flags</a></li><li class="chapter-item expanded "><a href="apps.html"><strong aria-hidden="true">4.</strong> CLI Tools and Subcommands</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="intro/getopt.html"><strong aria-hidden="true">1.1.</strong> lcli and getopt</a></li><li class="chapter-item expanded "><a href="intro/lfescript.html"><strong aria-hidden="true">1.2.</strong> lfescript</a></li><li class="chapter-item expanded "><a href="intro/examples.html"><strong aria-hidden="true">1.3.</strong> Examples</a></li></ol></li><li class="chapter-item expanded "><a href="scripts/simple.html"><strong aria-hidden="true">2.</strong> Creating Simple Scripts</a></li><li class="chapter-item expanded "><a href="scripts/flags.html"><strong aria-hidden="true">3.</strong> Scripts with Flags</a></li><li class="chapter-item expanded "><a href="apps.html"><strong aria-hidden="true">4.</strong> CLI Tools and Subcommands</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -147,15 +148,51 @@
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
 <p>lcli (pronounced <em>&quot;Elk-ly&quot;</em>) is a semi-opinionated library for creating command line tools and supporting options (flags) and arguments (non-flag parameters) parsing. Regular options parsing is done using the Erlang <a href="https://github.com/oubiwann/getopt-erl">getopt</a> community library. lcli manages the handling of commands and nested subcommands.</p>
 <p>This library attempts to provide CLI-tool-building capabilities to LFE developers in such a way that it feels LFE-idiomatic. Two excellet libraries have served as inspiration, from two different programming languages: Rust's <a href="https://docs.rs/clap/latest/clap/">clap</a> and Go's <a href="https://github.com/alecthomas/kong">kong</a> (with the former having a bigger influence).</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="erlang-getopt-wrapper-and-more"><a class="header" href="#erlang-getopt-wrapper-and-more">Erlang <code>getopt</code> Wrapper and More</a></h1>
+<p>lcli provides a very thing wrapper around getopt, basically converting to and from the getopt spec tuple with LFE/Erlang maps.</p>
+<p>In addition, lcli provides command and subcommand support where the command spec is a superset of the getopt spec (thus allowing us to use the getopt library transparently).</p>
+<p>With <code>lcli</code>, you have the option of defining specs as maps or as <code>getopt</code> specs; each has its own aestheic tradeoffs. Note that with maps, the name is optional (taken from the long option name if missing).</p>
+<p>Example map specs:</p>
+<pre><code class="language-cl">'(#m(long &quot;host&quot; short #\h type string default &quot;localhost&quot;
+     help &quot;Database server host&quot;)
+  #m(long &quot;port&quot; short #\p type integer
+     help &quot;Database server port&quot;)
+  #m(long &quot;dbname&quot; type string default &quot;users&quot;
+     help &quot;Database name&quot;)
+  #m(name xml short #\x help &quot;Output data in XML&quot;)
+  #m(long &quot;verbose&quot; short #\v type integer help &quot;Verbosity level&quot;)
+  #m(name file type string help &quot;Output file&quot;))
+</code></pre>
+<p>Example <code>getopt</code> specs:</p>
+<pre><code class="language-cl">'(#(host #\h &quot;host&quot; #(string &quot;localhost&quot;) &quot;Database server host&quot;)
+  #(port #\p &quot;port&quot; integer &quot;Database server port&quot;)
+  #(dbname undefined &quot;dbname&quot;#(string &quot;users&quot;) &quot;Database name&quot;)
+  #(xml #\x &quot;xml&quot; undefined undefined &quot;Output data in XML&quot;)
+  #(verbose #\v &quot;verbose&quot; integer &quot;Verbosity level&quot;)
+  #(file undefined undefined string &quot;Output file&quot;))
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="differences-from-lfescript-"><a class="header" href="#differences-from-lfescript-">Differences from <code>lfescript</code> <a href="intro/lfescript.html#table-of-contents">↟</a></a></h1>
+<p>This library does not use <code>lfescript</code> as its basis, but rather the <code>lfe</code> executable itself. As such, a <code>main</code> function is not run automatically. Instead, the final line of the script must call the entrypoint function.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="examples"><a class="header" href="#examples">Examples</a></h1>
+<p>Example scripts (some not using lcli, for demonstration purposes) are available here:</p>
+<ul>
+<li><a href="intro/examples">Examples</a></li>
+</ul>
+<p>If you've created a simple script that shows off some nice functionality of &quot;Elkly&quot;, you are encouraged to submit a PR for inclusion here!</p>
+<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="cli-apps"><a class="header" href="#cli-apps">CLI &quot;Apps&quot;</a></h1>
+<p>TBD</p>
+<h2 id="commands"><a class="header" href="#commands">Commands</a></h2>
+<p>TBD</p>
+<h2 id="subcommands"><a class="header" href="#subcommands">Subcommands</a></h2>
+<p>More sophisticated usage can create subcommands, etc., for creating command line tools with potentially vast arrays of functionality:</p>
+<pre><code class="language-cl">TBD
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
 
-                            <a rel="next" href="intro/getopt.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -164,9 +201,6 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
 
-                    <a rel="next" href="intro/getopt.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
             </nav>
 
         </div>
@@ -189,6 +223,11 @@
 
         <!-- Custom JS scripts -->
 
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
 
     </div>
     </body>
