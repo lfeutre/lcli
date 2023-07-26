@@ -22,8 +22,6 @@ lcli (pronounced *"Elk-ly"*) is a library for creating command line tools throug
 
 ## Example Usage [&#x219F;](#table-of-contents)
 
-### Wrapping `getopt`
-
 A simple script below demonstrates lcli's wrappage of the Erlang getopt library:
 
 ```cl
@@ -93,7 +91,7 @@ Usage: db.lfe [--help] [-h [<host>]] [-p <port>] [--dbname [<dbname>]]
 
 ## Documentation [&#x219F;](#table-of-contents)
 
-Project documentation is TBD.
+Project documentation is [here](https://lfeutre.github.io/lcli/).
 
 ## License [&#x219F;](#table-of-contents)
 
