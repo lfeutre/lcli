@@ -13,27 +13,26 @@
 ;; TODO: change 2nd arg to map
 (defun parse
   ((specs `(#(script ,script) #(args ,args)))
-   (if (lcli-cmds:commands? specs)
-     (parse-with-commands script args specs)
-     (parse-without-commands script args specs))))
+   (let ((cmds (lcli-cmds:get specs)))
+     (if (== (length cmds) 0)
+       (parse-without-commands specs script args)
+       (parse-with-commands specs cmds script args)))))
 
-;; TODO: change output to map
-(defun parse-with-commands (script args specs)
+(defun parse-with-commands (specs cmds script args)
   (let* ((opts-only-spec (lcli-cmds:filter specs))
-         (`#m(opts ,opts args ,args) (lcli-opts:parse opts-only-spec args))
-         (commands (lcli-opts:get 'commands specs)))
-    `(#(cmd ,script)
-      #(opts ,opts)
-      #(args ,args)
-      #(cmds ,(parse-commands commands)))))
+         (`#m(opts ,opts args ,args) (lcli-opts:parse opts-only-spec args)))
+    (make-parsed
+     app script
+     commands cmds
+     options opts
+     args args)))
 
-;; TODO: change output to map
-(defun parse-without-commands (script args specs)
+(defun parse-without-commands (specs script args)
   (let ((`#m(opts ,opts args ,args) (lcli-opts:parse specs args)))
-    `(#(cmd ,script)
-      #(opts ,opts)
-      #(args ,args)
-      #(cmds undefined))))
+    (make-parsed
+     app script
+     options opts
+     args args)))
 
 (defun parse-command
   ((`#(,cmd #(opts ,opts)))

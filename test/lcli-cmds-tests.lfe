@@ -26,8 +26,8 @@
   '(#m(long "help" short #\h help "Display help text.")
     #m(long "file" short #\f type string help "Use this file.")
     #m(commands
-       (#(db #(opts (#m(long "help" short #\h help "Display help for 'db' command."))))
-        #(app #(opts (#m(long "help" short #\h help "Display help for 'app' command."))))))))
+       (#m(name "db" opts (#m(long "help" short #\h help "Display help for 'db' command.")))
+        #m(name "app" opts (#m(long "help" short #\h help "Display help for 'app' command.")))))))
 
 (deftest commands?
   (is-equal 'false (lcli-cmds:commands? (specs-1)))
@@ -45,7 +45,7 @@
   (is-equal '(false false true) (lists:map #'lcli-cmds:commands?/1 (specs-5))))
 
 (deftest filter-commands
-  (is-equal (lcli-spec:->maps (specs-1)) (lcli-cmds:filter (specs-1)))
-  (is-equal (lcli-spec:->maps (specs-2)) (lcli-cmds:filter (specs-2)))
-  (is-equal (lcli-spec:->maps (specs-2)) (lcli-cmds:filter (specs-4)))
-  (is-equal (lcli-spec:->maps (specs-2)) (lcli-cmds:filter (specs-5))))
+  (is-equal (specs-1) (lcli-cmds:filter (specs-1)))
+  (is-equal (specs-2) (lcli-cmds:filter (specs-2)))
+  (is-equal (specs-2) (lcli-cmds:filter (specs-4)))
+  (is-equal (specs-2) (lcli-cmds:filter (specs-5))))

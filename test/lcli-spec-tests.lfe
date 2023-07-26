@@ -19,8 +19,8 @@
 (defun specs-4s ()
   `(#(help #\h "help" undefined "Display help text.")
     #(file #\f "file" string "Use this file.")
-    #(commands (#(db #(opts (#(help #\h "help" undefined "Display help for 'db' command."))))
-                #(app #(opts (#(help #\h "help" undefined "Display help for 'app' command."))))))))
+    #(commands (#(db #(options (#(help #\h "help" undefined "Display help for 'db' command."))))
+                #(app #(options (#(help #\h "help" undefined "Display help for 'app' command."))))))))
 
 (defun specs-1m ()
   '(#m(short #\h long "help" help "Display help text.")))
@@ -38,8 +38,8 @@
   '(#m(long "help" short #\h help "Display help text.")
     #m(long "file" short #\f type string help "Use this file.")
     #m(commands
-       (#(db #(opts (#m(long "help" short #\h help "Display help for 'db' command."))))
-        #(app #(opts (#m(long "help" short #\h help "Display help for 'app' command."))))))))
+       (#m(name "db" options (#m(long "help" short #\h help "Display help for 'db' command.")))
+        #m(name "app" options (#m(long "help" short #\h help "Display help for 'app' command.")))))))
 
 (deftest specs->maps-simple
   (is-equal (specs-1m)
@@ -64,3 +64,25 @@
             (lcli-spec:->maps (specs-3m)))
   (is-equal (specs-2m)
             (lcli-spec:->maps (specs-4m))))
+
+(deftest specs->
+  ;; simple specs
+  (is-equal (specs-1s)
+            (lcli-spec:-> (specs-1s)))
+  (is-equal (specs-2s)
+            (lcli-spec:-> (specs-2s)))
+  ;; non-list 'commands' specs
+  (is-equal (specs-3s)
+            (lcli-spec:-> (specs-3s)))
+  ;; list 'commands' specs
+  (is-equal (specs-2s)
+            (lcli-spec:-> (specs-4s)))
+  ;; maps
+  (is-equal (specs-1s)
+            (lcli-spec:-> (specs-1m)))
+  (is-equal (specs-2s)
+            (lcli-spec:-> (specs-2m)))
+  (is-equal (specs-3s)
+            (lcli-spec:-> (specs-3m)))
+  (is-equal (specs-2s)
+            (lcli-spec:-> (specs-4m))))

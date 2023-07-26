@@ -1,6 +1,6 @@
 (defmodule lcli-spec
   (export
-   (-> 2)
+   (-> 1) (-> 2)
    (->map 1)
    (->maps 1)
    (map-> 1)
@@ -34,17 +34,36 @@
       help ,help))
 
 (defun ->
+  ((data) (when (is_record data 'app))
+   (-> data 'app))
+  ((data) (when (is_record data 'option))
+   (-> data 'option))
+  ((data) (when (is_list data))
+   (cond ((lcli-util:recordlist? data 'app) (-> data 'app))
+         ((lcli-util:recordlist? data 'command) (-> data 'command))
+         ((lcli-util:recordlist? data 'option) (-> data 'option))
+         ('true (-> data 'undefined))))
+  ((data)
+   (-> data 'undefined)))
+
+(defun ->
   ;; is it a list?
   ((data type) (when (is_list data))
    (cond ((lcli-util:recordlist? data type)
-          (lists:map (lambda (x) (record-> x type)) data))
+          (clean-specs (lists:map (lambda (x) (record-> x type)) data)))
          ((lcli-util:speclist? data)
-          data)
+          (clean-specs data))
          ((lcli-util:maplist? data)
-          (lists:map #'map->/1 data))
+          (clean-specs (lists:map #'map->/1 data)))
          ('true
           (lfe_io:format "Didn't match list: ~p" (list data)))))
-  ;; is it a record?
+  ;; is it an app record?
+  ((data 'app) (when (is_record data 'app))
+   (record-> data 'app))
+  ;; is it an command record?
+  ((data 'command) (when (is_record data 'command))
+   (record-> data 'command))
+  ;; is it an option record?
   ((data 'option) (when (is_record data 'option))
    (record-> data 'option))
   ;; is the data already a spec?
@@ -55,11 +74,21 @@
   ((data _) (when (is_map data))
    (map-> data)))
 
+(defun maps->
+  (('())
+   '())
+  ((data)
+   (if (lcli-util:speclist? data)
+     (clean-specs data)
+     (lists:map #'map->/1 data))))
+
 (defun map->
   ;; is the data already a spec?
   ((data) (when (or (is_tuple data) (is_atom data)))
    data)
   ((data) (when (== (map_size data) 0))
+   '())
+  ((`#m(commands ,_))
    '())
   (((= `#m(name ,name long ,long)  map-spec))
    (let ((`#m(name ,name short ,short long ,long help ,help)
@@ -71,14 +100,6 @@
    (map-> (new-map map-spec)))
   (((= `#m(short ,short arg ,arg help ,help) args))
    (lcli-error:invalid-spec "one of name or long is required")))
-
-(defun maps->
-  (('())
-   '())
-  ((maps)
-   (if (lcli-util:speclist? maps)
-     maps
-     (lists:map #'map->/1 maps))))
 
 (defun ->maps
   (('())
@@ -105,7 +126,11 @@
 
 (defun record->
   (((match-option name n short s long l type t default d help h) 'option)
-   (map-> (clean-map `#m(name ,n short ,s long ,l type ,t default ,d help ,h)))))
+   (map-> (clean-map `#m(name ,n short ,s long ,l type ,t default ,d help ,h))))
+  (((match-command options os) 'command)
+   (-> os))
+  (((match-app options os) 'app)
+   (-> os)))
 
 ;;; Private functions
 
@@ -125,6 +150,19 @@
   ((kv acc)
    (lists:append acc (list kv))))
 
+(defun clean-specs (speclist)
+  (lists:foldl #'clean-spec/2
+               '()
+               speclist))
+
+(defun clean-spec
+  (('() acc)
+   acc)
+  ((`#(commands ,_) acc)
+   acc)
+  ((spec acc)
+   (lists:append acc (list spec))))
+   
 (defun ->map (name short long arg-spec help)
   "Convert an Erlang getopt spec (`type option_spec`) to a map."
   (let* ((val (arg-spec->map arg-spec))
