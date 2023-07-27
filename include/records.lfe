@@ -1,11 +1,12 @@
 (defrecord app
   (name "app" (string))
   (title "" (string))
-  (description "" (string))
+  (desc "" (string))
   (options '() (list))
   (args '() (list))
   (commands '() (list))
-  (with-colour 'true (atom)))
+  ;;(with-colour 'true (atom))) --> move to lib-opts
+  (lib-opts '() (list)))
 
 (defrecord group
   (name 'undefined (atom))
@@ -15,7 +16,7 @@
 (defrecord command
   (name "" (string))
   (title "" (string))
-  (description "" (string))
+  (desc "" (string))
   (subcommands '() (list))
   (options '() (list))
   (args '() (list))
@@ -50,8 +51,8 @@
   (title "" (string))
   (synopsis-heading "SYNOPSIS" (string))
   (synopsis "" (string))
-  (description-heading "DESCRIPTION" (string))
-  (description "" (string))
+  (desc-heading "DESCRIPTION" (string))
+  (desc "" (string))
   (options-heading "OPTIONS" (string))
   (options "" (string))
   (commands-heading "COMMANDS" (string))
