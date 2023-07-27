@@ -30,7 +30,7 @@
   (short 0 (integer))
   (long "" (string))
   (help "" (string))
-  (type 'undefined (atom))
+  (val-type 'undefined (atom))
   (default 'undefined (any))
   (required 'false (atom))
   (multi-valued 'false (atom))
