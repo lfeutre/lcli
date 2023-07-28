@@ -116,9 +116,10 @@
   (let (((match-plain-args script name args args) (args)))
     (basic-usage name opts args)))
 
-(defun basic-usage (name opts)
-  (let (((match-plain-args args args) (args)))
-    (basic-usage name opts args)))
+;; commented out for Xref, for now
+;;(defun basic-usage (name opts)
+;;  (let (((match-plain-args args args) (args)))
+;;    (basic-usage name opts args)))
 
 (defun basic-usage (name opts args)
   (let* (((match-plain-args args args) (args))
