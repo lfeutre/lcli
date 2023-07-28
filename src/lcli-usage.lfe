@@ -48,16 +48,19 @@
   ((filename)
    (bbmustache:parse_file filename)))
 
-(defun compile (help)
-  (compile help 'manpage))
+(defun compile
+  (((= (match-help desc "") help))
+   (compile help 'basic-manpage))
+  ((help)
+   (compile help 'manpage)))
 
 (defun compile (help template-name)
   (let ((bbm-map `#m(title-heading ,(help-title-heading help)
                      title ,(help-title help)
                      synopsis-heading ,(help-synopsis-heading help)
                      synopsis ,(help-synopsis help)
-                     description-heading ,(help-description-heading help)
-                     description ,(help-description help)
+                     desc-heading ,(help-desc-heading help)
+                     desc ,(help-desc help)
                      options-heading ,(help-options-heading help)
                      options ,(help-options help)
                      commands-heading ,(help-commands-heading help)
@@ -72,11 +75,10 @@
 (defun synopsis (cmd options args)
   (synopsis cmd options args (default-width) (default-indent)))
 
-(defun synopsis (cmd options args width indent)
-  (let ((specs (lcli-spec:-> options 'option))
-        (len (+ (length (getopt-usage-prefix)) 1)))
+(defun synopsis (cmd opts args width indent)
+  (let ((len (+ (length (getopt-usage-prefix)) 1)))
      (wrap-line
-      (++ (string:substr (lists:flatten (getopt:usage_cmd_line cmd specs))
+      (++ (string:substr (lists:flatten (lcli-getopt:usage-cmd-line cmd opts))
                          len)
           (args-synopsis args))
       width indent)))
@@ -91,16 +93,15 @@
 (defun options (options)
   (options options '()))
 
-(defun options (options args)
-  (options options args (default-width) (default-indent)))
+(defun options (opts args)
+  (options opts args (default-width) (default-indent)))
 
-(defun options (options args width indent)
-  (let ((specs (lcli-spec:-> options 'option)))
-    (string:trim (getopt:usage_options specs (args-options args))
-                 'both "\n")))
+(defun options (opts args width indent)
+  (string:trim (lcli-getopt:usage-options opts (args-options args))
+               'both "\n"))
 
 (defun commands (cmds)
-  (string:trim (getopt:usage_options '() (cmds-options cmds))
+  (string:trim (lcli-getopt:usage-options '() (cmds-options cmds))
                'both "\n"))
 
 ;;; Private constants
@@ -113,18 +114,16 @@
   (lists:foldl #'arg-synopsis/2 "" args))
 
 (defun arg-synopsis
-  (((match-arg name name required required) acc)
-   (arg-synopsis name required acc))
-  ((`#m(name ,name required true) acc)
-   (arg-synopsis name 'true acc))
-  ((`#m(name ,name) acc)
-   (arg-synopsis name 'false acc)))
+  (((match-arg name n required? r) acc)
+   (arg-synopsis n r acc)))
 
 (defun arg-synopsis
   ((name 'true acc)
    (io_lib:format "~s <~s>" (list acc name)))
   ((name _ acc)
    (io_lib:format "~s [<~s>]" (list acc name))))
+
+;;; Formatting options that get passed to getopt
 
 (defun args-options
   (('())
@@ -133,14 +132,12 @@
    (lists:map #'arg-option/1 args)))
 
 (defun arg-option
+  ((option) (when (is_map option))
+   (arg-option (lcli-type:map->record option)))
   (((match-arg name name help help)) (when (== help ""))
    (arg-option name 'undefined))
   (((match-arg name name help help))
-   (arg-option name help))
-  ((`#m(name ,name help ,help))
-   (arg-option name help))
-  ((`#m(name ,name))
-   (arg-option name 'undefined)))
+   (arg-option name help)))
 
 (defun arg-option
   ((name 'undefined)
@@ -155,20 +152,20 @@
    (lists:map #'cmd-option/1 cmds)))
 
 (defun cmd-option
+  ((option) (when (is_map option))
+   (cmd-option (lcli-type:map->record option)))
   (((match-command name name title title)) (when (== title ""))
    (cmd-option name 'undefined))
   (((match-command name name title title))
-   (cmd-option name title))
-  ((`#m(name ,name title ,title))
-   (cmd-option name title))
-  ((`#m(name ,name))
-   (cmd-option name 'undefined)))
+   (cmd-option name title)))
 
 (defun cmd-option
   ((name 'undefined)
    `#(,name ""))
   ((name title)
    `#(,name ,title)))
+
+;;; Text utilities
 
 (defun wrap-line (text width indent)
   (string:trim

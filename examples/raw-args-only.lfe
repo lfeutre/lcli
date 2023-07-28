@@ -11,13 +11,15 @@
 ;;;;   $ ./examples/simple.lfe --greeting "Hello" --greetee "World"
 ;;;;
 
+(include-lib "lcli/include/records.lfe")
+
 (defun main ()
-  (let ((plain-args (init:get_plain_arguments))
-        (`(#(script ,script) #(args ,args)) (lcli-args:get-raw)))
-    (lfe_io:format "Plain args: ~p~n" `(,plain-args))
+  (let ((pas (init:get_plain_arguments))
+        ((match-plain-args script s args as) (lcli:args)))
+    (lfe_io:format "Plain args: ~p~n" `(,pas))
     (lfe_io:format "Helper script name: ~p~n" `(,script-name))
     (lfe_io:format "Helper script args: ~p~n" `(,script-args))
-    (lfe_io:format "Script name: ~p~n" `(,script))
-    (lfe_io:format "Script args: ~p~n" `(,args))))
+    (lfe_io:format "Script name: ~p~n" `(,s))
+    (lfe_io:format "Script args: ~p~n" `(,as))))
 
 (main)

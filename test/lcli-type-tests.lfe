@@ -8,29 +8,29 @@
 ;;; Predicates
 
 (deftest maplist?
-  (is-equal 'false (lcli-util:maplist? '()))
-  (is-equal 'true (lcli-util:maplist? '(#m())))
-  (is-equal 'true (lcli-util:maplist? '(#m(a 1) #m(b 2))))
-  (is-equal 'false (lcli-util:maplist? '(#m(a 1) #m(b 2) 3)))
-  (is-equal 'false (lcli-util:maplist? '(#())))
-  (is-equal 'false (lcli-util:maplist? '(#(a 1))))
-  (is-equal 'false (lcli-util:maplist? '(#(a 1) #(b 2)))))
+  (is-equal 'false (lcli-type:maplist? '()))
+  (is-equal 'true (lcli-type:maplist? '(#m())))
+  (is-equal 'true (lcli-type:maplist? '(#m(a 1) #m(b 2))))
+  (is-equal 'false (lcli-type:maplist? '(#m(a 1) #m(b 2) 3)))
+  (is-equal 'false (lcli-type:maplist? '(#())))
+  (is-equal 'false (lcli-type:maplist? '(#(a 1))))
+  (is-equal 'false (lcli-type:maplist? '(#(a 1) #(b 2)))))
 
 (deftest speclist?
-  (is-equal 'false (lcli-util:speclist? '()))
-  (is-equal 'true (lcli-util:speclist? '(#())))
-  (is-equal 'true (lcli-util:speclist? '(#(a 1))))
-  (is-equal 'true (lcli-util:speclist? '(#(a 1) b)))
-  (is-equal 'true (lcli-util:speclist? '(#(a b c))))
-  (is-equal 'false (lcli-util:speclist? '(#m(a b) #m(c d)))))
+  (is-equal 'false (lcli-type:speclist? '()))
+  (is-equal 'true (lcli-type:speclist? '(#())))
+  (is-equal 'true (lcli-type:speclist? '(#(a 1))))
+  (is-equal 'true (lcli-type:speclist? '(#(a 1) b)))
+  (is-equal 'true (lcli-type:speclist? '(#(a b c))))
+  (is-equal 'false (lcli-type:speclist? '(#m(a b) #m(c d)))))
 
 (deftest tuplelist?
-  (is-equal 'false (lcli-util:tuplelist? '()))
-  (is-equal 'true (lcli-util:tuplelist? '(#())))
-  (is-equal 'true (lcli-util:tuplelist? '(#(a 1))))
-  (is-equal 'false (lcli-util:tuplelist? '(#(a 1) b)))
-  (is-equal 'true (lcli-util:tuplelist? '(#(a b c))))
-  (is-equal 'false (lcli-util:tuplelist? '(#m(a b) #m(c d)))))
+  (is-equal 'false (lcli-type:tuplelist? '()))
+  (is-equal 'true (lcli-type:tuplelist? '(#())))
+  (is-equal 'true (lcli-type:tuplelist? '(#(a 1))))
+  (is-equal 'false (lcli-type:tuplelist? '(#(a 1) b)))
+  (is-equal 'true (lcli-type:tuplelist? '(#(a b c))))
+  (is-equal 'false (lcli-type:tuplelist? '(#m(a b) #m(c d)))))
 
 ;;; Records to maps
 

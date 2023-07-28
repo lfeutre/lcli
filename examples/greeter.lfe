@@ -25,20 +25,25 @@
 ;;;;   $ ./examples/simple-parse1.lfe --greeting 'On, no! ' --greetee 'Mr. Bill!'
 ;;;;   On, no! Mr. Bill!
 ;;;;
+
+(include-lib "lcli/include/records.lfe")
+
 (defun options ()
-  `(#(help #\h "help" undefined "Display this help text.")
-    #(greeting #\g "greeting" #(string "Hello, ") "A greeting for someone.")
-    #(greetee #\e "greetee" #(string "World!") "Someone or something to greet.")))
+  `(#m(type option name help short #\h long "help"
+       help "Display this help text.")
+    #m(type option name greeting short #\g long "greeting" val-type string default "Hello, "
+       help "A greeting for someone.")
+    #m(type option name greetee short #\e long "greetee" val-type string default "World!"
+       help "Someone or something to greet.")))
 
 (defun main ()
   (case (lcli:parse (options))
-    (`(,_ #(opts #m(help true)) ,_ ,_)
-     (lcli:usage (options)))
-    (`(,_ #(opts ,opts) ,_ ,_)
-      (io:format "~s~s~n"
-                 `(,(maps:get 'greeting opts)
-                   ,(maps:get 'greetee opts)))
-      (halt 0)))
-  'ok)
+    ((match-parsed options opts)
+     (lfe_io:format "~p~n" `(,opts))
+     (lcli:usage (options))
+     (halt 0))
+    (result
+     ;;(lfe_io:format "~p~n" `(,result))
+     (halt 0))))
 
 (main)

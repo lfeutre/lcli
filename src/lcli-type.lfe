@@ -2,7 +2,7 @@
   ;; predicates
   (export
    (maplist? 1)
-   (recordlist? 2)
+   (recordlist? 1) (recordlist? 2)
    (speclist? 1)
    (tuplelist? 1))
   ;; converters
@@ -24,6 +24,17 @@
    'false)
   ((l) (when (is_list l))
    (lists:all #'is_map/1 l))
+  ((_)
+   'false))
+
+(defun recordlist?
+  (('())
+   'false)
+  ((l) (when (is_list l))
+   (lists:all (lambda (x) (or (is_record x 'command)
+                              (is_record x 'option)
+                              (is_record x 'arg)))
+              l))
   ((_)
    'false))
 

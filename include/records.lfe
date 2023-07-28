@@ -27,13 +27,13 @@
 
 (defrecord option
   (name 'undefined (atom))
-  (short 0 (integer))
-  (long "" (string))
-  (help "" (string))
+  (short 'undefined (integer))
+  (long 'undefined (string))
+  (help 'undefined (string))
   (val-type 'undefined (atom))
   (default 'undefined (any))
-  (required 'false (atom))
-  (multi-valued 'false (atom))
+  (required? 'false (atom))
+  (multi-valued? 'false (atom))
   (delim "," (string))
   ;;(value-parser 'undefined (lambda))
   (value-parser 'undefined (any))
@@ -43,7 +43,7 @@
 
 (defrecord arg
   (name "" (string))
-  (required 'false (atom))
+  (required? 'false (atom))
   (help "" (string)))
 
 (defrecord help
@@ -59,10 +59,14 @@
   (commands "" (string))
   (additional "" (string)))
 
+(defrecord plain-args
+  (script "" (string))
+  (args '() (list)))
+
 (defrecord parsed
   (app "" (string))
   (commands '() (list))
-  (options #m() (any))
+  (options '() (list))
   (args '() (list)))
 
 (defun --loaded-lcli-records-- ()

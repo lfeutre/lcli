@@ -1,25 +1,27 @@
 #!/usr/bin/env lfe
 
+(include-lib "lcli/include/records.lfe")
+
 (defun options ()
-  '(#m(long "help" help "Display help text")
-    #m(long "host" short #\h type string default "localhost"
+  '(#m(type option long "help" help "Display help text")
+    #m(type option long "host" short #\h val-type string default "localhost"
        help "Database server host")
-    #m(long "port" short #\p type integer
+    #m(type option long "port" short #\p val-type integer
        help "Database server port")
-    #m(long "dbname" type string default "users"
+    #m(type option long "dbname" val-type string default "users"
        help "Database name")
-    #m(name xml short #\x help "Output data in XML")
-    #m(long "verbose" short #\v type integer help "Verbosity level")
-    #m(long "output" short #\o type string help "Output file")))
+    #m(type option name xml short #\x help "Output data in XML")
+    #m(type option long "verbose" short #\v val-type integer help "Verbosity level")
+    #m(type option long "output" short #\o val-type string help "Output file")))
 
 (defun main ()
   (case (lcli:parse (options))
-    (`(,_ #(opts #m(help true)) ,_ ,_)
-     (lcli:usage (options) "db.lfe")
+    ((match-parsed options opts)
+     (lfe_io:format "options: ~p~n" (list opts))
+     (lcli:usage (options))
      (halt 0))
     (result
-     (lfe_io:format "~p~n" `(,result))
-     (halt 0)))
-  'ok)
+     ;;(lfe_io:format "~p~n" `(,result))
+     (halt 0))))
 
 (main)

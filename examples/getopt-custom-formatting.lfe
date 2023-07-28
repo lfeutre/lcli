@@ -1,16 +1,16 @@
 #!/usr/bin/env lfe
 
 (defun options ()
-  '(#m(long "help" help "Display help text")
-    #m(long "local" short #\l
+  '(#m(type option long "help" help "Display help text")
+    #m(type option long "local" short #\l
        help "When the repository to clone from is on a local machine")
-    #m(long "verbose" short #\v
+    #m(type option long "verbose" short #\v
        help "Run verbosely.")
-    #m(long "quiet" short #\q
+    #m(type option long "quiet" short #\q
        help "Operate quietly.")
-    #m(long "origin" short #\o type string
+    #m(type option long "origin" short #\o val-type string
        help "Instead of using the remote name")
-    #m(long "branch" short #\b type string
+    #m(type option long "branch" short #\b val-type string
        help "Instead of pointing the newly created HEAD")))
 
 (defun opening ()
@@ -29,7 +29,7 @@
 (defun post-opts () "")
 
 (defun main ()
-  (getopt:usage (lcli-spec:maps-> (options))
+  (getopt:usage (lcli-getopt:->speclist (options))
                 (opening)
                 (post-cli)
                 (desc)
