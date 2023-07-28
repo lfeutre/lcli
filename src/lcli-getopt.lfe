@@ -22,7 +22,7 @@
   ((opts (match-plain-args script s args as))
    (case (getopt:parse (->speclist opts) as)
      (`#(ok #(,opts ,as))
-      (make-parsed options opts
+      (make-parsed options (parsed-opts->map opts)
                    args as))
      (err
       (log-error "Failed to parse args with given opts: ~p" (list as))
@@ -37,7 +37,7 @@
 (defun usage-cmd-line (cmd opts)
   (getopt:usage_cmd_line cmd (->speclist opts)))
 
-;; Private functions
+;;; Private functions
 
 (defun ->spec
   ((opt) (when (is_map opt))
@@ -61,3 +61,15 @@
    (list_to_atom long))
   ((name _)
    name))
+
+(defun parsed-opts->map (opts)
+  "Convert parsed CLI opts to a map."
+  (maps:from_list
+   (lists:map #'parsed-opt->tuple/1 opts)))
+
+(defun parsed-opt->tuple
+  "Ensure parsed opt is a tuple."
+  ((opt) (when (is_tuple opt))
+   opt)
+  ((opt) (when (is_atom opt))
+   `#(,opt true)))

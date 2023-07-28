@@ -15,13 +15,13 @@
     #m(type option long "output" short #\o val-type string help "Output file")))
 
 (defun main ()
-  (case (lcli:parse (options))
-    ((match-parsed options opts)
-     (lfe_io:format "options: ~p~n" (list opts))
-     (lcli:usage (options))
-     (halt 0))
-    (result
-     ;;(lfe_io:format "~p~n" `(,result))
-     (halt 0))))
+  (let ((opts (options)))
+    (case (lcli:parse opts)
+      ((match-parsed options `#m(help true))
+       (lcli:usage opts)
+       (halt 0))
+      (result
+       (lfe_io:format "~p~n" `(,result))
+       (halt 0)))))
 
 (main)
