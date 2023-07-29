@@ -37,14 +37,14 @@
    (parse (lcli-type:map->record data) args))
   ;; App
   (((= (match-app) data) args)
-   (parse-app data args))
+   (lcli-parse:app data args))
   ;; Command
   (((= (match-command) data) args)
-   (parse-command data args))
+   (lcli-parse:command data args))
   ;; Everything else
   ((data args)
    (cond ((lcli-type:maplist? data) (parse (lcli-type:maps->records data) args))
-         ((lcli-type:recordlist? data) (parse-recordlist data args))
+         ((lcli-type:recordlist? data) (lcli-parse:recordlist data args))
          ('true (lfe_io:format "Could not parse input: ~p~n" (list args))))))
 
 (defun start ()
@@ -53,12 +53,15 @@
 (defun usage
   ;; Non-list, map input
   ((input) (when (is_map input))
+   (log-debug "Converting map to record ...")
    (usage (lcli-type:map->record input)))
   ;; App
   (((match-app name n title t desc d options os args as commands cs))
+   (log-debug "Getting app usage ...")
    (app-usage n t d os as cs))
   ;; Command
   (((match-command name n title t desc d options os args as))
+   (log-debug "Getting command usage ...")
    (cmd-usage n t d os as))
   ;; Everything else
   ((input)
@@ -76,16 +79,19 @@
 
 ;;; Private functions
 
-(defun parse-app (data args)
-  (io:format "App-parsing TBD~n"))
+(defun parse-app
+  (((match-app options opts) args)
+   ;; XXX There's lots more to do here with commands, etc.
+   (let ((result (lcli-getopt:parse opts args)))
+     result)))
 
 (defun parse-command (data args)
   (io:format "Command-parsing TBD~n"))
 
-(defun parse-recordlist (data args)
-  (let ((result (lcli-getopt:parse data args)))
-    (io:format "Record-list-parsing TBD~n~p~n" (list result))
-    result))
+(defun parse-recordlist
+  ((data (= (match-plain-args script name) args))
+   (let ((result (lcli-getopt:parse data args)))
+     (update-parsed result app name))))
 
 (defun app-usage (name title desc opts args cmds)
   (log-debug "Got opts: ~p" (list opts))
@@ -99,7 +105,10 @@
                           synopsis synop
                           options opts
                           commands cmds)))
-    (lfe_io:format "~s~n" (list (lcli-usage:compile help 'app-manpage)))))
+    (log-debug "Got commands: ~p" (list cmds))
+    (case cmds
+      ('() (lfe_io:format "~s~n" (list (lcli-usage:compile help 'app-no-cmds-manpage))))
+      (_ (lfe_io:format "~s~n" (list (lcli-usage:compile help 'app-manpage)))))))
 
 (defun cmd-usage (name title desc opts args)
   (let* ((desc (lcli-usage:description desc))
@@ -113,19 +122,13 @@
     (lfe_io:format "~s~n" (list (lcli-usage:compile help)))))
 
 (defun basic-usage (opts)
-  (let (((match-plain-args script name args args) (args)))
-    (basic-usage name opts args)))
+  (let (((match-plain-args script name) (args)))
+    (basic-usage name opts)))
 
-;; commented out for Xref, for now
-;;(defun basic-usage (name opts)
-;;  (let (((match-plain-args args args) (args)))
-;;    (basic-usage name opts args)))
-
-(defun basic-usage (name opts args)
-  (let* (((match-plain-args args args) (args))
-         (synop (lcli-usage:synopsis name opts args))
-         (opts (lcli-usage:options opts args))
+(defun basic-usage (name opts)
+  (let* ((synop (lcli-usage:synopsis name opts))
+         (opts (lcli-usage:options opts))
          (help (make-help title name
                           synopsis synop
                           options opts)))
-    (lfe_io:format "~s~n" (list (lcli-usage:compile help)))))
+    (lfe_io:format "~s~n" (list (lcli-usage:compile help 'basic-manpage)))))

@@ -6,8 +6,8 @@ build:
 repl:
 	@rebar3 lfe repl
 
-test:
-	@rebar3 as test lfe ltest -tall
+test: clean
+	@rebar3 as test do compile,lfe ltest -tall
 
 clean:
 	@rm -rf _build/*/lib/lcli build/*/plugins/lcli

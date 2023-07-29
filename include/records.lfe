@@ -5,8 +5,7 @@
   (options '() (list))
   (args '() (list))
   (commands '() (list))
-  ;;(with-colour 'true (atom))) --> move to lib-opts
-  (lib-opts '() (list)))
+  (lib-opts '#m(with-color true) (map)))
 
 (defrecord group
   (name 'undefined (atom))
@@ -63,11 +62,18 @@
   (script "" (string))
   (args '() (list)))
 
+;; The options and args fields from this record are initially populated when
+;; obtaining results from the third-party Erlang getopt library. Funtions that
+;; make this call update the other fields once the results from getopt have
+;; been parsed.
 (defrecord parsed
+  (app-name "" (string))
+  (script "" (string))
   (app "" (string))
   (commands '() (list))
-  (options '() (list))
-  (args '() (list)))
+  (options #m() (map)) ; note that parsed options are different than option definitions
+  (args '() (list))
+  (error '() (string)))
 
 (defun --loaded-lcli-records-- ()
   "This is just a dummy function for display purposes when including from the

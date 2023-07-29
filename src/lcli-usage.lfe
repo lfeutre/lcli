@@ -18,6 +18,7 @@
   (export
    (--loaded-lcli-records-- 0)))
 
+(include-lib "logjam/include/logjam.hrl")
 (include-lib "lcli/include/records.lfe")
 
 ;;; Constants
@@ -48,11 +49,8 @@
   ((filename)
    (bbmustache:parse_file filename)))
 
-(defun compile
-  (((= (match-help desc "") help))
-   (compile help 'basic-manpage))
-  ((help)
-   (compile help 'manpage)))
+(defun compile (help)
+  (compile help 'manpage))
 
 (defun compile (help template-name)
   (let ((bbm-map `#m(title-heading ,(help-title-heading help)
@@ -76,12 +74,8 @@
   (synopsis cmd options args (default-width) (default-indent)))
 
 (defun synopsis (cmd opts args width indent)
-  (let ((len (+ (length (getopt-usage-prefix)) 1)))
-     (wrap-line
-      (++ (string:substr (lists:flatten (lcli-getopt:usage-cmd-line cmd opts))
-                         len)
-          (args-synopsis args))
-      width indent)))
+    (++ (lcli-getopt:usage-cmd-line cmd opts indent)
+        (args-synopsis args)))
 
 (defun description (text)
   (description text (default-width) (default-indent)))
@@ -103,10 +97,6 @@
 (defun commands (cmds)
   (string:trim (lcli-getopt:usage-options '() (cmds-options cmds))
                'both "\n"))
-
-;;; Private constants
-
-(defun getopt-usage-prefix () "Usage: ")
 
 ;;; Private functions
 

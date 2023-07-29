@@ -1,5 +1,14 @@
 #!/usr/bin/env lfe
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;
+;;;; Before running, ensure that lfe is in your $PATH!
+;;;;
+;;;; An example run of the script, exercising flags and args:
+;;;;
+;;;; $ ./examples/fake-db.lfe -x --port 5099 --dbname webapp -o output.dump arg1 arg2
+;;;;
 
+(include-lib "logjam/include/logjam.hrl")
 (include-lib "lcli/include/records.lfe")
 
 (defun options ()
@@ -18,10 +27,13 @@
   (let ((opts (options)))
     (case (lcli:parse opts)
       ((match-parsed options `#m(help true))
-       (lcli:usage opts)
-       (halt 0))
-      (result
-       (lfe_io:format "~p~n" `(,result))
-       (halt 0)))))
+       (lcli:usage opts))
+      ((match-parsed app-name an app a commands c options os args as error '())
+       (lfe_io:format "App Name: ~p~nApp: ~p~nCommands: ~p~nOptions: ~p~nArgs: ~p~n"
+                      (list an a c os as)))
+      ((match-parsed error err)
+       (io:format "~n~s~n~n" (list err))
+       (halt 1)))
+    (halt 0)))
 
 (main)

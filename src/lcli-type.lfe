@@ -84,7 +84,7 @@
        options ,(records->maps os)
        args ,as
        commands ,(records->maps cs)
-       lib-opts ,(records->maps los)))
+       lib-opts ,los))
   (((match-group name n summary s order o))
    `#m(type group
        name ,n
@@ -139,12 +139,15 @@
        commands-heading ,ch
        commands ,cs
        additional ,a))
-  (((match-parsed app a commands cs options os args as))
+  (((match-parsed app-name an script s app a commands cs options os args as error e))
    `#m(type parsed
+       app-name ,an
+       script ,s
        app ,a
        commands ,(records->maps cs)
-       options ,(records->maps os)
-       args ,(records->maps as))))
+       options ,os
+       args ,(records->maps as)
+       error ,e)))
 
 (defun maps->records (maps)
   (lists:map #'map->record/1 maps))
@@ -193,21 +196,24 @@
              required? (maps:get 'required? m 'false)
              help (maps:get 'help m "")))
   (((= `#m(type help) m))
-    (make-help title-heading (maps:get 'name m "NAME")
-               title (maps:get 'title m "")
-               synopsis-heading (maps:get 'name m "SYNOPSIS")
-               synopsis (maps:get 'synopsis m "")
-               desc-heading (maps:get 'desc-heading m "DESCRIPTION")
-               desc (maps:get 'desc m "")
-               options-heading (maps:get 'options-heading m "OPTIONS")
-               options (maps:get 'options m '())
-               commands-heading (maps:get 'commands-heading m "COMMANDS")
-               commands (maps:get 'commands m '())
-               additional (maps:get 'additional m '())))
+   (make-help title-heading (maps:get 'name m "NAME")
+              title (maps:get 'title m "")
+              synopsis-heading (maps:get 'name m "SYNOPSIS")
+              synopsis (maps:get 'synopsis m "")
+              desc-heading (maps:get 'desc-heading m "DESCRIPTION")
+              desc (maps:get 'desc m "")
+              options-heading (maps:get 'options-heading m "OPTIONS")
+              options (maps:get 'options m '())
+              commands-heading (maps:get 'commands-heading m "COMMANDS")
+              commands (maps:get 'commands m '())
+              additional (maps:get 'additional m '())))
   (((= `#m(type parsed) m))
-    (make-parsed app (maps:get 'app m "")
-                 commands (maps->records (maps:get 'commands m '()))
-                 options (maps->records (maps:get 'options m '()))
-                 args (maps->records (maps:get 'args m '()))))
+   (make-parsed app-name (maps:get 'app-name m "")
+                script (maps:get 'script m "")
+                app (maps:get 'app m "")
+                commands (maps->records (maps:get 'commands m '()))
+                options (maps:get 'options m #m())
+                args (maps->records (maps:get 'args m '()))
+                error (maps:get 'error m "")))
   ((unmatched)
    (lfe_io:format "#'map->record/1 could not match ~p~n" (list unmatched))))

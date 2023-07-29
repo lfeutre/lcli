@@ -34,28 +34,28 @@
 
 ;;; Records to maps
 
-(deftest app-rcrd->map
+(deftest app-record->map
   (let* ((r (make-app name "my-app"))
          (m (lcli-type:record->map r)))    
     (is-equal 'true (is_map m))
     (is-equal 'app (mref m 'type))
     (is-equal "my-app" (mref m 'name))))
 
-(deftest group-rcrd->map
+(deftest group-record->map
   (let* ((r (make-group summary "the X group"))
          (m (lcli-type:record->map r)))    
     (is-equal 'true (is_map m))
     (is-equal 'group (mref m 'type))
     (is-equal "the X group" (mref m 'summary))))
 
-(deftest command-rcrd->map
+(deftest command-record->map
   (let* ((r (make-command title "the X command"))
          (m (lcli-type:record->map r)))    
     (is-equal 'true (is_map m))
     (is-equal 'command (mref m 'type))
     (is-equal "the X command" (mref m 'title))))
 
-(deftest option-rcrd->map
+(deftest option-record->map
   (let* ((r (make-option long "ex" short #\x help "the X option"))
          (m (lcli-type:record->map r)))    
     (is-equal 'true (is_map m))
@@ -63,14 +63,14 @@
     (is-equal 'undefined (mref m 'val-type))
     (is-equal "the X option" (mref m 'help))))
 
-(deftest arg-rcrd->map
+(deftest arg-record->map
   (let* ((r (make-arg name "anarg"))
          (m (lcli-type:record->map r)))    
     (is-equal 'true (is_map m))
     (is-equal 'arg (mref m 'type))
     (is-equal "anarg" (mref m 'name))))
 
-(deftest help-rcrd->map
+(deftest help-record->map
   (let* ((r (make-help title "ex"))
          (m (lcli-type:record->map r)))    
     (is-equal 'true (is_map m))
@@ -78,12 +78,12 @@
     (is-equal "NAME" (mref m 'title-heading))
     (is-equal "ex" (mref m 'title))))
 
-(deftest parsed-rcrd->map
-  (let* ((r (make-parsed app "./script.lfe"))
+(deftest parsed-record->map
+  (let* ((r (make-parsed script "./script.lfe"))
          (m (lcli-type:record->map r)))    
     (is-equal 'true (is_map m))
     (is-equal 'parsed (mref m 'type))
-    (is-equal "./script.lfe" (mref m 'app))))
+    (is-equal "./script.lfe" (mref m 'script))))
 
 ;;; Maps to records
 
@@ -125,7 +125,7 @@
     (is-equal "ex" (help-title r))))
 
 (deftest parsed-map->record
-  (let* ((m #m(type parsed app "./script.lfe"))
+  (let* ((m #m(type parsed script "./script.lfe"))
          (r (lcli-type:map->record m)))
     (is-equal 'true (is_record r 'parsed))
-    (is-equal "./script.lfe" (parsed-app r))))
+    (is-equal "./script.lfe" (parsed-script r))))
