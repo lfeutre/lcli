@@ -1,3 +1,4 @@
+SHELL = /bin/bash
 PROJECT = lcli
 ROOT_DIR = $(shell pwd)
 REPO = $(shell git config --get remote.origin.url)
