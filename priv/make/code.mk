@@ -9,6 +9,11 @@ repl:
 test: clean
 	@rebar3 as test do compile,lfe ltest -tall
 
+xref:
+	@rebar3 xref
+
+test-all: test xref examples
+
 clean:
 	@rm -rf _build/*/lib/lcli build/*/plugins/lcli
 
