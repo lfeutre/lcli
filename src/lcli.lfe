@@ -79,20 +79,6 @@
 
 ;;; Private functions
 
-(defun parse-app
-  (((match-app options opts) args)
-   ;; XXX There's lots more to do here with commands, etc.
-   (let ((result (lcli-getopt:parse opts args)))
-     result)))
-
-(defun parse-command (data args)
-  (io:format "Command-parsing TBD~n"))
-
-(defun parse-recordlist
-  ((data (= (match-plain-args script name) args))
-   (let ((result (lcli-getopt:parse data args)))
-     (update-parsed result app name))))
-
 (defun app-usage (name title desc opts args cmds)
   (log-debug "Got opts: ~p" (list opts))
   (let* ((desc (lcli-usage:description desc))

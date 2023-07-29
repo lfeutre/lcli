@@ -154,15 +154,3 @@
    `#(,name ""))
   ((name title)
    `#(,name ,title)))
-
-;;; Text utilities
-
-(defun wrap-line (text width indent)
-  (string:trim
-   (string:trim
-    (lutil-text:wrap
-     (lists:flatten text)
-     width
-     (* 2 indent))
-    'both "\n")
-   'leading "  "))

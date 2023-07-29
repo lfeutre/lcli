@@ -1,6 +1,6 @@
 (defmodule lcli-parse
   (export
-   (app 2)
+   (app 2) (app2 2)
    (command 2)
    (recordlist 2))
   ;; Just to make xref shut up about an include
@@ -18,6 +18,8 @@
      result
      )))
 
+;; XXX Temp function; once it's sorted, it will be backwards-compatible
+;; with app, and the two can be merged.
 (defun app2
   (((match-app name n options os commands cs) args)
    ;; XXX There's lots more to do here with commands, etc.
