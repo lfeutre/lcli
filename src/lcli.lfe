@@ -2,6 +2,7 @@
   (export
    (args 0) (args 1)
    (parse 1) (parse 2)
+   (parse2 1) (parse2 2)
    (start 0)
    (usage 1)
    (version 0)
@@ -43,6 +44,23 @@
   ;; (((= (match-command) data) args)
   ;;  (lcli-parse:command data args))
   ;; Everything else
+  ((data args)
+   (cond ((lcli-type:maplist? data) (parse (lcli-type:maps->records data) args))
+         ((lcli-type:recordlist? data) (lcli-parse:recordlist data args))
+         ('true (lfe_io:format "Could not parse input: ~p~n" (list args))))))
+
+;; XXX temporary for development purposes; will be deleted when 0.2.0 ships
+(defun parse2 (data)
+  (parse2 data (args)))
+
+;; XXX temporary for development purposes; will be deleted when 0.2.0 ships
+(defun parse2
+  ;; Non-list, map input
+  ((data args) (when (is_map data))
+   (parse2 (lcli-type:map->record data) args))
+  ;; App
+  (((= (match-app) data) args)
+   (lcli-parse:app2 data args))
   ((data args)
    (cond ((lcli-type:maplist? data) (parse (lcli-type:maps->records data) args))
          ((lcli-type:recordlist? data) (lcli-parse:recordlist data args))

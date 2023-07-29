@@ -95,7 +95,8 @@
 
 (defun main ()
   (let ((opts (app)))
-    (case (lcli:parse opts)
+    ;; XXX using temporary, development functions
+    (case (lcli:parse2 opts)
       ((match-parsed options `#m(help true))
        (lcli:usage opts)
        (halt 0))

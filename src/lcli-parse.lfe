@@ -54,6 +54,10 @@
     ))
 
 (defun recordlist
+  "Note that record lists are only useful for simple scripts with no commands.
+  Command handling is not performed here, and the functionality of parsing
+  a record list is essentially a very thin layer over the simple opt parsing
+  functionality provided by the Erlang getopt library."
   ((data (= (match-plain-args script name) args))
    (let ((result (lcli-getopt:parse data args)))
      ;;(update-parsed-app-name result name)
