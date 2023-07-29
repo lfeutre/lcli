@@ -1,7 +1,7 @@
 (defmodule lcli-parse
   (export
    (app 2) (app2 2)
-   (command 2)
+   (commands 2)
    (recordlist 2))
   ;; Just to make xref shut up about an include
   (export
@@ -24,16 +24,34 @@
   (((match-app name n options os commands cs) args)
    ;; XXX There's lots more to do here with commands, etc.
    (let* (((match-command options cos) cs)
-          (app-result (lcli-getopt:parse os args))
-          (cmd-result (lcli-getopt:parse cos args)))
-     (update-parsed app-result
+          (parsed-app (lcli-getopt:parse os args))
+          (cmd-opts (lcli-getopt:parse cos args)))
+     (update-parsed parsed-app
                     app-name n
-                    commands (parsed-options cmd-result)
-                    args (parsed-args cmd-result)))))
+                    commands (commands cs (parsed-args parsed-app))
+                    args (parsed-args cmd-opts)))))
 
-(defun command (data args)
-  (io:format "Command-parsing TBD~n")
-  )
+(defun commands (cmd-defs app-args)
+  "Since any command may have a subcommand, the parsing of commands is a
+  bredth-first operation:
+  
+  * the app's args are examined for the first one that matches a command
+    name
+  * that command's def's 'options' are parsed
+  * if the command has any entries in its own 'commands' field, then the
+    remaining args are searched for a match with any of the legal
+    subcommands.
+  * this process is followed recursively until there are no more command
+    options with their own commands (subcommands).
+
+  At which point, the accumulated list of commands (subcommands) with their
+  associated parsed options is returned.
+
+  The list of passed command definitions are converted to a map for internal
+  use, with their keys being the command names in each of the defs."
+  (let ((lookup (maps:to_list
+                 (lists:map (lambda (m) `#((mref x 'name) x)) cmd-defs))))
+    ))
 
 (defun recordlist
   ((data (= (match-plain-args script name) args))

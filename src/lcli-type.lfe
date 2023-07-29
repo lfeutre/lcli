@@ -90,13 +90,13 @@
        name ,n
        summary ,s
        order ,o))
-  (((match-command name n title t desc d subcommands ss options os args as
+  (((match-command name n title t desc d commands cs options os args as
                    order o groups gs runner r))
    `#m(type command
        name ,n
        title ,t
        desc ,d
-       subcommands ,(records->maps ss)
+       commands ,(records->maps cs)
        options ,(records->maps os)
        args ,(records->maps as)
        order ,o
@@ -171,7 +171,7 @@
    (make-command name (maps:get 'name m "")
                  title (maps:get 'title m "")
                  desc (maps:get 'desc m "")
-                 subcommands (maps->records (maps:get 'subcommands m '()))
+                 commands (maps->records (maps:get 'commands m '()))
                  options (maps->records (maps:get 'options m '()))
                  args (maps->records (maps:get 'args m '()))
                  order (maps:get 'order m 0)
