@@ -1,0 +1,52 @@
+
+NAME
+  git - A command line tool for the version control system
+
+SYNOPSIS
+  git [-h] [-v] [--version] [--namespace] <command> [<args>]
+
+DESCRIPTION
+  Just what it says on the tin.
+
+OPTIONS
+  -h, --help     Display help text
+  -v, --verbose  Run verbosely
+  --version      show the version
+  --namespace    set the namespace
+  <command>      the command to execute
+  <args>         additional arguments required or accepted by the command
+
+COMMANDS
+  git init   Create an empty Git repository or reinitialize an existing one
+  git clone  Clone a repository into a new directory
+
+************************************************
+
+
+ Or, this could also be done using lcli records
+                 (see below ...)
+
+
+************************************************
+
+NAME
+  git - A command line tool for the version control system
+
+SYNOPSIS
+  git [--help] [-v] [--version] [--namespace] <command> [<args>]
+
+DESCRIPTION
+  Just what it says on the tin.
+
+OPTIONS
+  --help         Display help text
+  -v, --verbose  Run verbosely
+  --version      show the version
+  --namespace    set the namespace
+  <command>      the command to execute
+  <args>         additional arguments required or accepted by the command
+
+COMMANDS
+  git init   Create an empty Git repository or reinitialize an existing one
+  git clone  Clone a repository into a new directory
+

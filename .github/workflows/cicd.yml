@@ -38,6 +38,8 @@ jobs:
       run: rebar3 as test do compile,lfe ltest -tall
     #- name: Test Coverage
     #  run: rebar3 as test do proper -c, cover -v --min_coverage=0
+    - name: Run Examples
+      run: make examples
 
   old-builds:
     name: Old Erlang ${{ matrix.otp_version }} build
@@ -65,3 +67,5 @@ jobs:
       run: rebar3 as test do compile,lfe ltest -tall
     #- name: Test Coverage
     #  run: rebar3 as test do proper -c, cover -v --min_coverage=0
+    - name: Run Examples
+      run: make examples

@@ -8,6 +8,7 @@ all: build
 
 include priv/make/code.mk
 include priv/make/docs.mk
+include priv/make/examples.mk
 
 .PHONY: all
 
