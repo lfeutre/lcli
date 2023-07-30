@@ -7,6 +7,10 @@ examples: clean build fake-db greeter lcli-app-formatting
 
 fake-db:
 	test \
+	"$(shell $(LFE) $(EX_DIR)/fake-db.lfe --help)" \
+	== "$(shell cat priv/testing/fake-db-help.txt)"
+
+	test \
 	"$(shell $(LFE) $(EX_DIR)/fake-db.lfe -x --port 5099 --dbname webapp -o output.dump arg1 arg2)" \
 	== "$(shell cat priv/testing/fake-db.txt)"
 

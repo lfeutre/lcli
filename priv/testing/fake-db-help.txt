@@ -1,0 +1,18 @@
+
+NAME
+  ./examples/fake-db.lfe
+
+SYNOPSIS
+  ./examples/fake-db.lfe [--help] [-h [<host>]] [-p <port>]
+                         [--dbname [<dbname>]] [-x] [-v <verbose>]
+                         [-o <output>]
+
+OPTIONS
+  --help         Display help text
+  -h, --host     Database server host [default: localhost]
+  -p, --port     Database server port
+  --dbname       Database name [default: users]
+  -x             Output data in XML
+  -v, --verbose  Verbosity level
+  -o, --output   Output file
+
