@@ -70,7 +70,6 @@
                 ,(git-clone))))
 
 (defun main ()
-  ;;(lcli:start)
   (lcli:usage (app)))
 
 (main)

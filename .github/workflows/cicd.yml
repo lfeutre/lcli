@@ -18,7 +18,11 @@ jobs:
 
     strategy:
       matrix:
-        otp_version: ['24.3', '25.3', '26.0']
+        # TODO: once 26.0 supprt is fixed in LFE, we can re-enable it in CI/CD
+        # See the following for status/more info:
+        # * https://github.com/lfe/lfe/issues/474
+        #otp_version: ['24.3', '25.3', '26.0']
+        otp_version: ['24.3', '25.3']
 
     steps:
     - uses: actions/checkout@v3
