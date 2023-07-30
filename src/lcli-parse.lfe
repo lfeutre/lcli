@@ -23,13 +23,13 @@
 (defun app2
   (((match-app name n options os commands cs) args)
    ;; XXX There's lots more to do here with commands, etc.
-   (let* (((match-command options cos) cs)
-          (parsed-app (lcli-getopt:parse os args))
-          (cmd-opts (lcli-getopt:parse cos args)))
+   (let* ((parsed-app (lcli-getopt:parse os args))
+          (cmds (commands cs (parsed-args parsed-app))))
      (update-parsed parsed-app
                     app-name n
-                    commands (commands cs (parsed-args parsed-app))
-                    args (parsed-args cmd-opts)))))
+                    commands cmds
+                    ;;args (parsed-args cmds)
+                    ))))
 
 (defun commands (cmd-defs app-args)
   "Since any command may have a subcommand, the parsing of commands is a
@@ -49,8 +49,9 @@
 
   The list of passed command definitions are converted to a map for internal
   use, with their keys being the command names in each of the defs."
-  (let ((lookup (maps:to_list
-                 (lists:map (lambda (m) `#((mref x 'name) x)) cmd-defs))))
+  (let ((lookup (maps:from_list
+                 (lists:map (lambda (r) (command-lookup r app-args))
+                            cmd-defs))))
     ))
 
 (defun recordlist
@@ -64,3 +65,8 @@
      result)))
 
 ;;; Private functions
+
+(defun command-lookup (record app-args)
+  `#(,(command-name record)
+     #m(record ,record
+        parsed ,(lcli-getopt:parse (command-options record) app-args))))

@@ -61,6 +61,11 @@
   ;; App
   (((= (match-app) data) args)
    (lcli-parse:app2 data args))
+  ;; XXX Can we delete this chunk?
+  ;; Command
+  (((= (match-command) data) args)
+   (lcli-parse:commands data args))
+  ;; Everything else
   ((data args)
    (cond ((lcli-type:maplist? data) (parse (lcli-type:maps->records data) args))
          ((lcli-type:recordlist? data) (lcli-parse:recordlist data args))
@@ -80,9 +85,9 @@
    (app-usage n t d os as cs))
   ;; XXX Can we delete this next chunk?
   ;; Command
-  ;;(((match-command name n title t desc d options os args as))
-  ;; (log-debug "Getting command usage ...")
-  ;; (cmd-usage n t d os as))
+  (((match-command name n title t desc d options os args as))
+   (log-debug "Getting command usage ...")
+   (cmd-usage n t d os as))
   ;; Everything else
   ((input)
    (cond ((lcli-type:maplist? input) (usage (lcli-type:maps->records input)))
@@ -117,16 +122,16 @@
       (_ (lfe_io:format "~s~n" (list (lcli-usage:compile help 'app-manpage)))))))
 
 ;; XXX Can we delete this?
-;; (defun cmd-usage (name title desc opts args)
-;;   (let* ((desc (lcli-usage:description desc))
-;;          (synop (lcli-usage:synopsis name opts args))
-;;          (opts (lcli-usage:options opts args))
-;;          (title (io_lib:format "~s - ~s" (list name title)))
-;;          (help (make-help title title
-;;                           desc desc
-;;                           synopsis synop
-;;                           options opts)))
-;;     (lfe_io:format "~s~n" (list (lcli-usage:compile help)))))
+(defun cmd-usage (name title desc opts args)
+  (let* ((desc (lcli-usage:description desc))
+         (synop (lcli-usage:synopsis name opts args))
+         (opts (lcli-usage:options opts args))
+         (title (io_lib:format "~s - ~s" (list name title)))
+         (help (make-help title title
+                          desc desc
+                          synopsis synop
+                          options opts)))
+    (lfe_io:format "~s~n" (list (lcli-usage:compile help)))))
 
 (defun basic-usage (opts)
   (let (((match-plain-args script name) (args)))
