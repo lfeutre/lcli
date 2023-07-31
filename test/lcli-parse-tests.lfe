@@ -14,6 +14,11 @@
 (defun legal-subsubcommands ()
   '("grandchild1"))
 
+(deftest command-app-no-args
+  (let ((args '()))
+    (is-equal #(() "" '())
+              (lcli-parse:command (legal-commands) args))))
+
 (deftest command-app-args
   (let ((args '("arg1" "arg2")))
     (is-equal #(("arg1" "arg2") "" '())
@@ -40,13 +45,16 @@
               (lcli-parse:command (legal-commands) args))))
 
 (deftest app-args-subcommands
-  (let* ((args '("arg1" "arg2" "parent" "child2" "grandchild1" "arg3"))
+  (let* ((args '("arg1" "arg2"
+                 "parent" "arg3"
+                 "child2" "arg4" "arg5" "arg6"
+                 "grandchild1" "arg7"))
          (`#(,pre "parent" ,post) (lcli-parse:command (legal-commands) args)))
     (is-equal '("arg1" "arg2") pre)
-    (is-equal '("child2" "grandchild1" "arg3") post)
+    (is-equal '("arg3" "child2" "arg4" "arg5" "arg6" "grandchild1" "arg7") post)
     (let ((`#(,pre "child2" ,post) (lcli-parse:command (legal-subcommands) post)))
-      (is-equal '() pre)
-      (is-equal '("grandchild1" "arg3") post)
+      (is-equal '("arg3") pre)
+      (is-equal '("arg4" "arg5" "arg6" "grandchild1" "arg7") post)
       (let ((`#(,pre "grandchild1" ,post) (lcli-parse:command (legal-subsubcommands) post)))
-        (is-equal '() pre)
-        (is-equal '("arg3") post)))))
+        (is-equal '("arg4" "arg5" "arg6") pre)
+        (is-equal '("arg7") post)))))
