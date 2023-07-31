@@ -1,6 +1,7 @@
 (defmodule lcli-parse
   (export
    (app 2) (app2 2)
+   (command 2) (command 3)
    (commands 2)
    (recordlist 2))
   ;; Just to make xref shut up about an include
@@ -53,6 +54,17 @@
                  (lists:map (lambda (r) (command-lookup r app-args))
                             cmd-defs))))
     ))
+
+(defun command (legal-commands args)
+  (command legal-commands args '()))
+
+(defun command
+  ((_ '() acc)
+   `#(,acc "" '()))
+  ((legal-commands `(,head . ,tail) acc)
+   (if (lists:member head legal-commands)
+     `#(,acc ,head ,tail)
+     (command legal-commands tail (++ acc (list head))))))
 
 (defun recordlist
   "Note that record lists are only useful for simple scripts with no commands.
