@@ -1,9 +1,14 @@
 (defmodule lcli-parse
   (export
    (app 2) (app2 2)
-   (command 2) (command 3)
+   (find-command 2) (find-command 3)
    (commands 2)
    (recordlist 2))
+  ;; Utility functions
+  (export
+   (get-command-def 2)
+   (getopt 2)
+   (legal-commands 1))
   ;; Just to make xref shut up about an include
   (export
    (--loaded-lcli-records-- 0)))
@@ -32,39 +37,54 @@
                     ;;args (parsed-args cmds)
                     ))))
 
-(defun commands (cmd-defs app-args)
-  "Since any command may have a subcommand, the parsing of commands is a
-  bredth-first operation:
+(defun commands (cmd-defs parent-args)
+  (commands cmd-defs
+            parent-args
+            '()))
   
-  * the app's args are examined for the first one that matches a command
-    name
-  * that command's def's 'options' are parsed
-  * if the command has any entries in its own 'commands' field, then the
-    remaining args are searched for a match with any of the legal
-    subcommands.
-  * this process is followed recursively until there are no more command
-    options with their own commands (subcommands).
+(defun commands
+  (('() _ acc)
+   acc)
+  ((_ '() acc)
+   acc)
+  ((cmd-defs parent-args acc)
+   (let* ((legal-cmds (legal-commands cmd-defs))
+          (`#(,_pre-cmd-args ,name ,post-cmd-args) (find-command legal-cmds parent-args))
+          (cmd-def (get-command-def cmd-defs name))
+          (parsed (getopt cmd-def parent-args)))
+     (commands (command-commands cmd-def)
+               post-cmd-args
+               (++ acc `(#m(name ,name
+                            parsed ,parsed
+                            args ,post-cmd-args)))))))
 
-  At which point, the accumulated list of commands (subcommands) with their
-  associated parsed options is returned.
+(defun find-command (legal-cmds args)
+  "This function takes a list of supported commands (sibling to each other; not
+  commands from different levels) and looks for the first element of the args
+  list that matches one of the commands. When it finds a match, the search ends
+  with a three-tuple being returned with the following structure:
 
-  The list of passed command definitions are converted to a map for internal
-  use, with their keys being the command names in each of the defs."
-  (let ((lookup (maps:from_list
-                 (lists:map (lambda (r) (command-lookup r app-args))
-                            cmd-defs))))
-    ))
+  1. first element: the arguments that precede the command (a list of strings)
+  2. second element: the command itself (a string)
+  3. third element: the argument remaining at the point when a legal command
+     was found in the args list
 
-(defun command (legal-commands args)
-  (command legal-commands args '()))
+  If there is no command in the args, the first element in the reults tuple will
+  be comprised of the entire list of args.
 
-(defun command
+  If the first element in the args list is a legal command, the first element
+  in the results tuple will be empty and the last element of the results will
+  contain the args after the command. The last element of the results will be
+  empty if the passed args consist only of a single legal command."
+  (find-command legal-cmds args '()))
+
+(defun find-command
   ((_ '() acc)
    `#(,acc "" '()))
-  ((legal-commands `(,head . ,tail) acc)
-   (if (lists:member head legal-commands)
+  ((legal-cmds `(,head . ,tail) acc)
+   (if (lists:member head legal-cmds)
      `#(,acc ,head ,tail)
-     (command legal-commands tail (++ acc (list head))))))
+     (find-command legal-cmds tail (++ acc (list head))))))
 
 (defun recordlist
   "Note that record lists are only useful for simple scripts with no commands.
@@ -76,9 +96,25 @@
      ;;(update-parsed-app-name result name)
      result)))
 
+;;; Utility functions
+
+(defun get-command-def
+  (('() _)
+   '())
+  ((`(,head . ,tail) name)
+   (if (== (command-name head) name)
+     head
+     (get-command-def tail name))))
+
+(defun getopt
+  (((match-command name n options '()) parent-args)
+   (make-parsed args parent-args))
+  (((match-command name n options os) parent-args)
+   (let ((args (make-plain-args script n args parent-args)))
+     (lcli-getopt:parse os args))))
+
+(defun legal-commands (cmd-defs)
+  (lists:map (lambda (x) (command-name x)) cmd-defs))
+
 ;;; Private functions
 
-(defun command-lookup (record app-args)
-  `#(,(command-name record)
-     #m(record ,record
-        parsed ,(lcli-getopt:parse (command-options record) app-args))))
